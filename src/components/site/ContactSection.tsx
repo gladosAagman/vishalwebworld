@@ -1,0 +1,145 @@
+"use client";
+
+import { Phone } from "lucide-react";
+import { useState } from "react";
+
+import { services } from "@/data/services";
+import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
+import { WhatsAppButton } from "./WhatsAppButton";
+
+
+export function ContactSection() {
+  const defaultService = services[0]?.name ?? "Online Service";
+  const [form, setForm] = useState({
+    name: "",
+    mobile: "",
+    place: "",
+    service: defaultService,
+    note: "",
+  });
+
+  function submit(event: React.FormEvent) {
+    event.preventDefault();
+    const msg = `Namaste Vishal Web World!\nMujhe ye service chahiye.\nService: ${form.service}\nName: ${form.name}\nMobile: ${form.mobile}\nCity/Village: ${form.place}\nDetails: ${form.note || "-"}`;
+    window.open(waLink(msg), "_blank", "noopener,noreferrer");
+  }
+
+  const field =
+    "mt-1 w-full rounded-lg border border-input bg-background px-3.5 py-2.5 text-sm outline-none transition-shadow focus:ring-2 focus:ring-ring";
+
+  return (
+    <section id="contact" className="bg-secondary py-16">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-2">
+        <div className="animate-fade-up">
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+            Get in touch
+          </span>
+          <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
+            Request a service in 30 seconds
+          </h2>
+          <p className="mt-3 text-sm text-secondary-foreground sm:text-base">
+            Form bhariye — send karte hi aapki details seedha hamare WhatsApp par
+            pahunch jaayengi aur hum turant reply karenge.
+          </p>
+          <dl className="mt-6 space-y-3 text-sm">
+            <div className="card-soft card-soft-hover animate-fade-up p-4 [animation-delay:80ms]">
+              <dt className="flex items-center gap-2 font-semibold text-foreground">
+                <Phone aria-hidden="true" className="h-4 w-4 text-primary" />
+                WhatsApp / Call
+              </dt>
+              <dd className="mt-1 text-muted-foreground">{WHATSAPP_DISPLAY}</dd>
+            </div>
+            <div className="card-soft card-soft-hover animate-fade-up p-4 [animation-delay:140ms]">
+              <dt className="font-semibold text-foreground">Working hours</dt>
+              <dd className="text-muted-foreground">Monday – Sunday, 9:00 AM to 8:00 PM</dd>
+            </div>
+            <div className="card-soft card-soft-hover animate-fade-up p-4 [animation-delay:200ms]">
+              <dt className="font-semibold text-foreground">Centre</dt>
+              <dd className="text-muted-foreground">
+                Vishal Web World — digital services centre in your area
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <form onSubmit={submit} className="card-soft animate-fade-up p-5 sm:p-6 [animation-delay:120ms]">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <label htmlFor="c-service" className="text-sm font-medium">
+                Which service do you need?
+              </label>
+              <select
+                id="c-service"
+                value={form.service}
+                onChange={(event) => setForm({ ...form, service: event.target.value })}
+                className={field}
+              >
+                {services.map((service) => (
+                  <option key={service.id} value={service.name}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="c-name" className="text-sm font-medium">
+                Your name
+              </label>
+              <input
+                id="c-name"
+                required
+                value={form.name}
+                onChange={(event) => setForm({ ...form, name: event.target.value })}
+                className={field}
+              />
+            </div>
+            <div>
+              <label htmlFor="c-mobile" className="text-sm font-medium">
+                Mobile number
+              </label>
+              <input
+                id="c-mobile"
+                required
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                value={form.mobile}
+                onChange={(event) => setForm({ ...form, mobile: event.target.value })}
+                className={field}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="c-place" className="text-sm font-medium">
+                City / Village
+              </label>
+              <input
+                id="c-place"
+                value={form.place}
+                onChange={(event) => setForm({ ...form, place: event.target.value })}
+                className={field}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="c-note" className="text-sm font-medium">
+                Extra details
+              </label>
+              <textarea
+                id="c-note"
+                rows={3}
+                value={form.note}
+                onChange={(event) => setForm({ ...form, note: event.target.value })}
+                className={field}
+              />
+            </div>
+          </div>
+          <WhatsAppButton type="submit" size="lg" className="mt-6 w-full">
+            Send on WhatsApp
+          </WhatsAppButton>
+
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            Aapki details sirf WhatsApp message ke roop mein hamein bheji jaati hain.
+          </p>
+        </form>
+      </div>
+    </section>
+  );
+}

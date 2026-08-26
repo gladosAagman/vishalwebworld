@@ -1,0 +1,99 @@
+.star-border-container {
+  display: inline-flex;
+  position: relative;
+  border-radius: 9999px;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.star-border-container:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.border-gradient-bottom,
+.border-gradient-top {
+  position: absolute;
+  width: 300%;
+  height: 50%;
+  opacity: 0.85;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.border-gradient-bottom {
+  bottom: -14px;
+  right: -250%;
+  animation-name: star-movement-bottom;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.border-gradient-top {
+  top: -14px;
+  left: -250%;
+  animation-name: star-movement-top;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.inner-content {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.65rem 1.35rem;
+  z-index: 1;
+  transition:
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 300ms ease,
+    border-color 300ms ease;
+}
+
+.star-border-container:hover .inner-content {
+  transform: translateY(-2px);
+}
+
+.star-border-container:active .inner-content {
+  transform: translateY(0);
+}
+
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .border-gradient-bottom,
+  .border-gradient-top {
+    animation: none !important;
+  }
+}
