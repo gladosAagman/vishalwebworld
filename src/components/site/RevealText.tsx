@@ -12,7 +12,7 @@ export function RevealText({ children, className = "" }: RevealTextProps) {
       <ScrollReveal
         baseOpacity={0}
         baseRotation={4}
-        blurStrength={10}
+        blurStrength={5}
         containerClassName="!my-0"
         textClassName="text-balance font-display text-foreground"
       >

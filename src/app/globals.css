@@ -92,6 +92,96 @@
   --shadow-card: 0 1px 2px oklch(0.32 0.12 264 / 0.06),
     0 10px 30px -18px oklch(0.32 0.12 264 / 0.28);
   --shadow-lift: 0 18px 40px -18px oklch(0.32 0.12 264 / 0.4);
+
+  /* --- 3D stage tokens ------------------------------------------------
+   * The story sections build depth out of four ingredients: a receding grid
+   * floor, soft aurora light sources, glass cards and a vignette. Each one is
+   * a token so light and dark stay a single design, not two.
+   */
+  --stage-bg: oklch(0.975 0.008 250);
+  --stage-ink: var(--foreground);
+  --stage-grid: oklch(0.56 0.2 258 / 0.15);
+  --stage-glow-a: oklch(0.66 0.19 258 / 0.42);
+  --stage-glow-b: oklch(0.72 0.16 160 / 0.34);
+  --stage-glow-c: oklch(0.83 0.15 78 / 0.3);
+  /* Near-opaque on light: a translucent white card over a near-white stage has
+     almost no edge, and the glass reads as a rendering glitch rather than depth. */
+  --stage-card: oklch(1 0 0 / 0.9);
+  --stage-card-border: oklch(0.56 0.2 258 / 0.22);
+  --stage-card-shadow: 0 28px 60px -30px oklch(0.32 0.12 264 / 0.42);
+  --stage-vignette: radial-gradient(
+    120% 80% at 50% 40%,
+    transparent 40%,
+    oklch(0.56 0.06 258 / 0.1) 100%
+  );
+}
+
+/*
+ * Dark theme. Applied by adding .dark to <html> (see the no-flash script in
+ * layout.tsx). Hues are kept identical to light; only lightness/chroma move.
+ *
+ * Deliberately NOT inverted: --primary / --brand stay saturated enough that
+ * their near-white *-foreground text keeps contrast, because those pairs are
+ * used both for solid buttons and for text over the hero gradient.
+ */
+.dark {
+  --background: oklch(0.17 0.02 262);
+  --foreground: oklch(0.95 0.006 250);
+  --card: oklch(0.21 0.024 262);
+  --card-foreground: oklch(0.95 0.006 250);
+  --popover: oklch(0.21 0.024 262);
+  --popover-foreground: oklch(0.95 0.006 250);
+  --primary: oklch(0.62 0.19 258);
+  --primary-foreground: oklch(0.99 0.004 250);
+  --primary-dark: oklch(0.13 0.022 262);
+  --secondary: oklch(0.225 0.026 262);
+  --secondary-foreground: oklch(0.9 0.018 255);
+  --muted: oklch(0.235 0.024 262);
+  --muted-foreground: oklch(0.7 0.026 258);
+  --accent: oklch(0.31 0.055 258);
+  --accent-foreground: oklch(0.93 0.03 255);
+  --highlight: oklch(0.82 0.15 78);
+  --highlight-foreground: oklch(0.2 0.05 70);
+  --brand: oklch(0.66 0.145 160);
+  --brand-foreground: oklch(0.15 0.02 160);
+  --destructive: oklch(0.62 0.22 27.3);
+  --destructive-foreground: oklch(0.98 0.003 248);
+  --border: oklch(0.3 0.02 258);
+  --input: oklch(0.34 0.022 258);
+  --ring: oklch(0.62 0.14 258);
+
+  /* Keep the hero deep in dark mode instead of tracking the lighter --primary. */
+  --gradient-hero: radial-gradient(
+      140% 100% at 100% 0%,
+      color-mix(in oklab, var(--brand) 26%, oklch(0.28 0.1 258)) 0%,
+      transparent 52%
+    ),
+    linear-gradient(140deg, oklch(0.14 0.025 262) 0%, oklch(0.3 0.11 258) 100%);
+  --gradient-page: linear-gradient(
+    140deg,
+    oklch(0.14 0.025 262) 0%,
+    oklch(0.28 0.1 258) 70%,
+    color-mix(in oklab, var(--brand) 55%, oklch(0.3 0.09 200)) 100%
+  );
+
+  /* Shadows read as depth on dark only when they are near-black and deeper. */
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 10px 30px -18px oklch(0 0 0 / 0.7);
+  --shadow-lift: 0 18px 40px -18px oklch(0 0 0 / 0.8);
+
+  --stage-bg: oklch(0.135 0.022 262);
+  --stage-ink: var(--foreground);
+  --stage-grid: oklch(0.72 0.15 258 / 0.16);
+  --stage-glow-a: oklch(0.55 0.21 262 / 0.55);
+  --stage-glow-b: oklch(0.6 0.16 168 / 0.4);
+  --stage-glow-c: oklch(0.7 0.15 60 / 0.28);
+  --stage-card: oklch(0.24 0.03 262 / 0.66);
+  --stage-card-border: oklch(0.78 0.1 258 / 0.18);
+  --stage-card-shadow: 0 32px 70px -30px oklch(0 0 0 / 0.85);
+  --stage-vignette: radial-gradient(
+    120% 80% at 50% 40%,
+    transparent 35%,
+    oklch(0.08 0.02 262 / 0.75) 100%
+  );
 }
 
 @layer base {
@@ -102,6 +192,11 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 6rem;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
@@ -274,14 +369,20 @@
   background: color-mix(in oklab, var(--primary-foreground) 9%, transparent);
 }
 
-/* Scroll-triggered reveals (driven by ScrollFx) */
+/*
+ * Scroll-triggered reveals (driven by ScrollFx).
+ * No will-change: with this many elements on a page, holding a compositing
+ * layer for each one measured as the single largest scroll cost (43.2ms ->
+ * 31.9ms average frame on a 4x-throttled wheel scroll). transform/opacity are
+ * composited during the transition regardless.
+ */
 .reveal {
   opacity: 0;
-  transform: translateY(28px) scale(0.985);
+  /* translate only: scaling text re-rasterises it every frame */
+  transform: translateY(28px);
   transition:
     opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
 }
 
 .reveal[data-reveal-state="in"] {
@@ -289,44 +390,12 @@
   transform: none;
 }
 
-/* Per-word text reveal for headings (driven by ScrollFx) */
-.text-reveal .word-reveal {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.5em) rotateX(-40deg);
-  transform-origin: bottom center;
-  transition:
-    opacity 620ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: calc(var(--wi, 0) * 55ms);
-  will-change: opacity, transform;
-}
-
-.text-reveal[data-reveal-state="in"] .word-reveal {
-  opacity: 1;
-  transform: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .text-reveal .word-reveal,
   .reveal {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
-}
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
 }
 
 

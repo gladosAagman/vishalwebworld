@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
+import { loadGsap, refreshScrollTriggers } from "@/lib/gsap";
 import "./ScrollReveal.css";
 
 type ScrollRevealProps = {
@@ -50,17 +51,8 @@ export function ScrollReveal({
     let cleanup: (() => void) | undefined;
 
     void (async () => {
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
+      const { gsap } = await loadGsap();
       if (cancelled) return;
-      gsap.registerPlugin(ScrollTrigger);
-
-      // keep ScrollTrigger in sync with Lenis smooth scrolling
-      const lenis = (window as unknown as { __lenis?: { on: (e: string, cb: () => void) => void; off?: (e: string, cb: () => void) => void } }).__lenis;
-      const update = () => ScrollTrigger.update();
-      lenis?.on("scroll", update);
 
       const tweens = [
         gsap.fromTo(
@@ -113,12 +105,17 @@ export function ScrollReveal({
         );
       }
 
+      // Built against whatever the page measured as at mount; re-measure once the
+      // route has actually settled so the reveal is not stuck at baseOpacity.
+      refreshScrollTriggers();
+
       cleanup = () => {
-        lenis?.off?.("scroll", update);
         for (const t of tweens) {
           t.scrollTrigger?.kill();
           t.kill();
         }
+        // Killing triggers leaves the remaining ones with stale positions.
+        refreshScrollTriggers();
       };
     })();
 

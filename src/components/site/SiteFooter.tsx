@@ -17,13 +17,13 @@ const links = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-primary-dark text-primary-foreground">
+    <footer className="relative overflow-hidden bg-primary-dark text-primary-foreground">
       <div className="accent-bar h-1 w-full" />
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-3">
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 pb-6 pt-12 sm:grid-cols-3">
         <div className="animate-fade-up">
           <SiteLogo
-            className="h-16 w-auto rounded-xl bg-card px-3 py-2 object-contain"
-            fallbackClassName="inline-block rounded-xl bg-card px-3 py-2 text-lg text-foreground"
+            className="h-16 w-auto rounded-xl bg-white px-3 py-2 object-contain"
+            fallbackClassName="inline-block rounded-xl bg-white px-3 py-2 text-lg text-slate-900"
           />
           <p className="mt-3 text-sm text-primary-foreground/80">
             Your trusted digital services centre. Sarkari kaam, forms aur banking,
@@ -60,7 +60,21 @@ export function SiteFooter() {
 
         </div>
       </div>
-      <div className="border-t border-primary-foreground/15 px-4 py-4 text-center text-xs text-primary-foreground/70">
+
+      {/*
+        Oversized wordmark, painted with the site's accent gradient. Sized in vw
+        so it scales with the viewport — ~8.9vw lands the 16-character string at
+        ~91% of the width, so it never clips or forces horizontal scroll. Sits in
+        its own band above the copyright line.
+      */}
+      <span
+        aria-hidden="true"
+        className="text-gradient pointer-events-none relative z-0 block select-none whitespace-nowrap px-4 text-center font-display text-[clamp(2rem,8.9vw,10.5rem)] font-extrabold leading-[0.95] tracking-tight opacity-40"
+      >
+        VISHAL WEB WORLD
+      </span>
+
+      <div className="relative z-10 px-4 pb-5 pt-2 text-center text-xs text-primary-foreground/70">
         © {new Date().getFullYear()} Vishal Web World. This is a private service
         centre, not a government department. Check official portals for final scheme
         details.

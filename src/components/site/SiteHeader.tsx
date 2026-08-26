@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import GlassSurface from "@/components/GlassSurface";
 import { Button } from "@/components/ui/button";
 import { SiteLogo } from "./SiteLogo";
+import { ThemeToggle } from "./ThemeToggle";
 import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
 import { WhatsAppButton } from "./WhatsAppButton";
 
@@ -51,7 +52,7 @@ export function SiteHeader() {
         blur={12}
         displace={0.6}
         distortionScale={-140}
-        className={`w-full border border-white/50 transition-all duration-300 ${scrolled ? "shadow-[var(--shadow-card)]" : ""}`}
+        className={`w-full border border-white/50 transition-all duration-300 dark:border-white/10 ${scrolled ? "shadow-[var(--shadow-card)]" : ""}`}
       >
       <div className="flex w-full items-center gap-3 px-3 sm:px-4">
 
@@ -63,7 +64,7 @@ export function SiteHeader() {
         >
           <SiteLogo
             priority
-            className="h-10 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-12"
+            className="h-10 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-12 dark:rounded-lg dark:bg-white/90 dark:px-2 dark:py-1"
             fallbackClassName="text-lg sm:text-xl"
           />
         </Link>
@@ -87,10 +88,12 @@ export function SiteHeader() {
           </ul>
         </nav>
 
+        <ThemeToggle className="ml-auto lg:ml-0" />
+
         <WhatsAppButton
           href={waLink("Namaste Vishal Web World! Mujhe ek service ke baare mein help chahiye.")}
           size="sm"
-          className="ml-auto hidden sm:inline-flex lg:ml-0"
+          className="hidden sm:inline-flex"
         >
           WhatsApp Now
         </WhatsAppButton>
@@ -103,7 +106,7 @@ export function SiteHeader() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label="Toggle menu"
-          className="ml-auto rounded-lg lg:hidden"
+          className="rounded-lg lg:hidden"
         >
           {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </Button>

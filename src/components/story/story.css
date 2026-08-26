@@ -1,0 +1,383 @@
+/*
+ * 3D story stage.
+ *
+ * Depth here is real CSS 3D (a perspective root plus children placed on the Z
+ * axis), not stacked 2D layers, so parallax falls out of the projection instead
+ * of having to be animated per layer. Only transform/opacity are animated, and
+ * `will-change` is set on the handful of elements that actually move.
+ */
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--stage-bg);
+  color: var(--stage-ink);
+  /* Pointer position, normalised to -1..1 and written by useStagePointer. */
+  --mx: 0;
+  --my: 0;
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: var(--stage-vignette);
+}
+
+/* --- light sources -------------------------------------------------- */
+
+.stage-aurora {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.stage-aurora span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.stage-aurora span:nth-child(1) {
+  inset: 4% auto auto 8%;
+  width: 46vw;
+  height: 46vw;
+  background: var(--stage-glow-a);
+  transform: translate3d(calc(var(--mx) * 26px), calc(var(--my) * 20px), 0);
+}
+
+.stage-aurora span:nth-child(2) {
+  inset: auto 6% 2% auto;
+  width: 40vw;
+  height: 40vw;
+  background: var(--stage-glow-b);
+  transform: translate3d(calc(var(--mx) * -34px), calc(var(--my) * -24px), 0);
+}
+
+.stage-aurora span:nth-child(3) {
+  inset: 40% 30% auto auto;
+  width: 26vw;
+  height: 26vw;
+  background: var(--stage-glow-c);
+  transform: translate3d(calc(var(--mx) * 18px), calc(var(--my) * -30px), 0);
+}
+
+/* --- receding grid floor -------------------------------------------- */
+
+.stage-floor {
+  position: absolute;
+  inset: 46% -60% -30% -60%;
+  z-index: 1;
+  pointer-events: none;
+  perspective: 260px;
+  perspective-origin: 50% 0%;
+  mask-image: linear-gradient(to bottom, black 0%, transparent 78%);
+}
+
+.stage-floor::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: rotateX(72deg);
+  transform-origin: 50% 0%;
+  background-image:
+    linear-gradient(to right, var(--stage-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--stage-grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  /* Scrubbed by the hero timeline; falls back to a static floor without JS. */
+  background-position: 0 calc(var(--floor-shift, 0) * 64px);
+}
+
+/* --- depth layer ------------------------------------------------------ */
+
+.stage-depth {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.stage-content {
+  position: relative;
+  z-index: 4;
+}
+
+/* --- floating glass chips -------------------------------------------- */
+
+.chip-3d {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--stage-card);
+  border: 1px solid var(--stage-card-border);
+  box-shadow: var(--stage-card-shadow);
+  backdrop-filter: blur(14px) saturate(1.4);
+  opacity: var(--chip-opacity, 0.85);
+  filter: blur(var(--chip-blur, 0px));
+  will-change: transform;
+  /* --z sets the chip's distance; --dx/--dy its placement drift. Parallax
+     strength is derived from --z so nearer chips move further, as they would
+     through a real lens. */
+  transform: translate3d(
+      calc(var(--mx) * var(--z) * -0.05px),
+      calc(var(--my) * var(--z) * -0.035px),
+      calc(var(--z) * 1px)
+    )
+    scale(calc(1 - var(--z) * 0.0004));
+}
+
+.chip-3d svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+/* --- act (pinned chapter) -------------------------------------------- */
+
+.act-viewport {
+  position: relative;
+  /* Long lens. A shorter one (≈1200px) magnifies the nearest carousel face by
+     1.6x, which is enough for it to grow up over the section heading. */
+  perspective: 1500px;
+  perspective-origin: 50% 45%;
+  transform-style: preserve-3d;
+}
+
+.act-card {
+  background: var(--stage-card);
+  border: 1px solid var(--stage-card-border);
+  border-radius: 1.25rem;
+  box-shadow: var(--stage-card-shadow);
+  backdrop-filter: blur(16px) saturate(1.35);
+}
+
+/* --- Z-axis journey --------------------------------------------------- */
+
+.journey-track {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Before GSAP takes over (and if it never loads) only the first card shows,
+   rather than three cards stacked on top of each other. */
+.journey-card:not(:first-child) {
+  opacity: 0;
+}
+
+.journey-card {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  height: fit-content;
+  max-width: 34rem;
+  will-change: transform, opacity;
+}
+
+/* --- rotating deck ---------------------------------------------------- */
+
+.deck {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* Radius and card width scale together so the faces never overlap: the chord
+     between two neighbours has to stay wider than a card. */
+  --deck-radius: 250px;
+  --deck-card-width: 12rem;
+}
+
+@media (min-width: 640px) {
+  .deck {
+    --deck-radius: 340px;
+    --deck-card-width: 14rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .deck {
+    --deck-radius: 430px;
+    --deck-card-width: 15rem;
+  }
+}
+
+.deck-card {
+  position: absolute;
+  /* Leaves headroom for the front face, which the perspective scales up. */
+  top: 2.5rem;
+  left: 50%;
+  width: var(--deck-card-width);
+  margin-left: calc(var(--deck-card-width) / -2);
+  transform: rotateY(var(--face, 0deg)) translateZ(var(--deck-radius));
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* --- scroll cue ------------------------------------------------------- */
+
+.scroll-cue {
+  width: 1.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1.5px solid currentColor;
+  opacity: 0.55;
+  position: relative;
+}
+
+.scroll-cue::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0.45rem;
+  width: 0.25rem;
+  height: 0.45rem;
+  margin-left: -0.125rem;
+  border-radius: 999px;
+  background: currentColor;
+  animation: cue-drop 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes cue-drop {
+  0% { transform: translateY(0); opacity: 0; }
+  25% { opacity: 1; }
+  75% { transform: translateY(0.85rem); opacity: 0; }
+  100% { transform: translateY(0.85rem); opacity: 0; }
+}
+
+/*
+ * Reduced motion: the story still reads, it just stops moving. Pinned sections
+ * are never pinned in this mode (the JS bails out), so each act lays out as an
+ * ordinary stacked section and every depth layer sits flat and fully visible.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .chip-3d,
+  .stage-aurora span {
+    transform: none !important;
+  }
+
+  /* The carousel becomes an ordinary card grid. */
+  .act-viewport {
+    height: auto !important;
+    perspective: none;
+  }
+
+  .deck {
+    height: auto !important;
+    transform: none !important;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  }
+
+  .deck-card {
+    position: static;
+    width: auto;
+    margin: 0;
+    transform: none !important;
+  }
+
+  .journey-card {
+    position: relative;
+    inset: auto;
+    margin: 0 auto;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .scroll-cue::after {
+    animation: none;
+  }
+}
+
+/*
+ * Pinning is done with `position: sticky`, not ScrollTrigger's pin. GSAP's pin
+ * injects a spacer element and has to re-measure it on every layout change,
+ * which is exactly the kind of stale-geometry state that only recovered on a
+ * page reload. Sticky is handled by the compositor and needs no measurement, so
+ * GSAP is left doing only what it is good at here: scrubbing transforms.
+ */
+.pin-shell {
+  position: relative;
+  height: var(--pin-length, 300vh);
+}
+
+.pin-frame {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  /* Clears the sticky header, which floats over the pinned frame. */
+  padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin-shell {
+    height: auto;
+  }
+
+  .pin-frame {
+    position: static;
+    height: auto;
+    display: block;
+    padding-block: 3rem;
+  }
+}
+
+/* --- progress rail ---------------------------------------------------- */
+
+.rail {
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* Below the stage the rail reads as a stepper, so it runs across. */
+.rail-horizontal {
+  grid-auto-flow: column;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.rail-label {
+  white-space: nowrap;
+}
+
+.rail-step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  opacity: 0.4;
+  transition: opacity 320ms ease;
+}
+
+.rail-step[data-active="true"] {
+  opacity: 1;
+}
+
+.rail-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 0 var(--stage-glow-a);
+  transition: box-shadow 320ms ease;
+}
+
+.rail-step[data-active="true"] .rail-dot {
+  box-shadow: 0 0 0 6px var(--stage-glow-a);
+}

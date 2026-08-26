@@ -52,7 +52,7 @@ export function OwnerSection() {
                 className="flex items-start gap-3 text-sm animate-fade-up"
                 style={{ animationDelay: `${160 + i * 80}ms` }}
               >
-                <BadgeCheck aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <BadgeCheck aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                 <span className="text-foreground/90">{item}</span>
               </li>
             ))}
