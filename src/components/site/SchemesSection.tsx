@@ -2,6 +2,7 @@
 
 import { ExternalLink } from "lucide-react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { schemeImage } from "@/data/schemeImages";
 import { schemeLogo, schemes } from "@/data/services";
 import { StarButton } from "./StarButton";
@@ -15,7 +16,7 @@ export function SchemesSection() {
     <section id="schemes" className="mx-auto max-w-6xl px-4 py-16">
       <div className="max-w-2xl animate-fade-up">
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-          Live schemes
+          <ShinyText text="Live schemes" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
         </span>
         <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
           Currently ongoing <span className="text-gradient">govt schemes</span>

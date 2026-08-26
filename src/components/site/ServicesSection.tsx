@@ -3,6 +3,7 @@
 import { ChevronDown, ExternalLink, FileCheck2, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { Button } from "@/components/ui/button";
 import { categoryImage } from "@/data/categoryImages";
 import { categories, services } from "@/data/services";
@@ -37,7 +38,7 @@ export function ServicesSection({ compact = false }: ServicesSectionProps) {
     <section id="services" className="mx-auto max-w-6xl px-4 py-16">
       <div className="max-w-2xl animate-fade-up">
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-          Our services
+          <ShinyText text="Our services" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
         </span>
         <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
           Har kaam ke liye <span className="text-gradient">ek hi jagah</span>

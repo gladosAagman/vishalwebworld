@@ -20,8 +20,10 @@ export default function CscPage() {
   return (
     <PageShell>
       <PageHero
+        motif="csc"
+        caption="2.50 lakh Gram Panchayat · since 2015"
         eyebrow="CSC 2.0"
-        title={<>Digital India ka local service network</>}
+        title="Digital India ka local service network"
         description="CSC 2.0 ka simple overview: kab launch hua, kaise kaam karta hai, aur Vishal Web World local support kaise deta hai."
       />
       <RevealText>CSC 2.0 Digital India ka wo network hai jo 2.50 lakh Gram Panchayat tak sarkari sewaayein pahunchata hai — aur Vishal Web World aapke shehar mein wahi bharosa deta hai.</RevealText>

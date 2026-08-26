@@ -3,7 +3,9 @@
 import { MessageSquareText, FileCheck2, PartyPopper } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { loadGsap } from "@/lib/gsap";
+import { StageBackdrop } from "./StageBackdrop";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
 
@@ -108,16 +110,12 @@ export function StoryJourney() {
   return (
     <div ref={shellRef} className="pin-shell" style={{ ["--pin-length" as string]: "340vh" }}>
       <section ref={frameRef} data-no-split className="pin-frame stage">
-        <div aria-hidden="true" className="stage-aurora">
-          <span />
-          <span />
-          <span />
-        </div>
+        <StageBackdrop floor={false} />
 
         <div className="stage-content mx-auto w-full max-w-6xl px-4">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Kaise kaam hota hai
+              <ShinyText text="Kaise kaam hota hai" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
             </span>
             <h2 className="mt-2 font-display text-[clamp(1.8rem,4.4vw,3rem)] font-bold leading-[1.05] tracking-[-0.025em]">
               Teen step, <span className="text-gradient">aur kaam khatam</span>

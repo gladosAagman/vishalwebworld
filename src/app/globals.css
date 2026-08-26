@@ -50,70 +50,99 @@
 }
 
 :root {
-  --radius: 0.5rem;
-  --background: oklch(0.99 0.004 250);
-  --foreground: oklch(0.22 0.03 262);
+  --radius: 0.625rem;
+
+  /*
+   * Palette taken from the logo (public/vww-logo-full.png), sampled and
+   * converted to oklch:
+   *
+   *   #101828  ink navy      oklch(0.210 0.034 263)  — the W and the wordmark
+   *   #0060F0  brand blue    oklch(0.539 0.229 261)  — the V's deep end
+   *   #0080F8  mid blue      oklch(0.610 0.202 255)
+   *   #00A8F8  brand cyan    oklch(0.699 0.162 241)  — the V's light end
+   *
+   * The mark is one blue-to-cyan sweep sitting on that navy, so the whole UI
+   * runs on those three and nothing else. --gradient-accent walks the same
+   * ramp the logo does, which is why gradient headlines read as the logo.
+   */
+  --background: oklch(0.985 0.004 262);
+  --foreground: oklch(0.21 0.034 263);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.03 262);
+  --card-foreground: oklch(0.21 0.034 263);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.03 262);
-  --primary: oklch(0.56 0.2 258);
-  --primary-foreground: oklch(0.99 0.004 250);
-  --primary-dark: oklch(0.26 0.035 258);
-  --secondary: oklch(0.96 0.012 250);
-  --secondary-foreground: oklch(0.3 0.06 260);
-  --muted: oklch(0.965 0.008 250);
-  --muted-foreground: oklch(0.55 0.028 258);
-  --accent: oklch(0.94 0.045 245);
-  --accent-foreground: oklch(0.35 0.11 260);
-  --highlight: oklch(0.8 0.15 78);
-  --highlight-foreground: oklch(0.28 0.06 70);
-  --brand: oklch(0.63 0.145 160);
-  --brand-foreground: oklch(0.99 0.01 160);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.915 0.012 252);
-  --input: oklch(0.9 0.014 252);
-  --ring: oklch(0.6 0.14 258);
+  --popover-foreground: oklch(0.21 0.034 263);
+  --primary: oklch(0.539 0.229 261);
+  --primary-foreground: oklch(0.99 0.004 262);
+  --primary-dark: oklch(0.21 0.034 263);
+  --secondary: oklch(0.955 0.01 258);
+  --secondary-foreground: oklch(0.32 0.06 261);
+  --muted: oklch(0.96 0.008 258);
+  --muted-foreground: oklch(0.5 0.03 262);
+  --accent: oklch(0.93 0.035 255);
+  --accent-foreground: oklch(0.36 0.13 260);
+  --highlight: oklch(0.699 0.162 241);
+  --highlight-foreground: oklch(0.21 0.034 263);
+  --brand: oklch(0.61 0.202 255);
+  --brand-foreground: oklch(0.99 0.006 258);
+  --destructive: oklch(0.55 0.19 27);
+  --destructive-foreground: oklch(0.985 0.003 248);
+  --border: oklch(0.9 0.013 260);
+  --input: oklch(0.88 0.016 260);
+  --ring: oklch(0.539 0.229 261);
 
   --gradient-hero: radial-gradient(
       140% 100% at 100% 0%,
-      color-mix(in oklab, var(--brand) 38%, var(--primary)) 0%,
+      var(--highlight) 0%,
       transparent 48%
     ),
     linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 100%);
-  --gradient-page: linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 70%, var(--brand) 100%);
+  --gradient-page: linear-gradient(140deg, var(--primary-dark) 0%, var(--primary) 65%, var(--highlight) 100%);
+  /* The logo's own sweep: deep blue into cyan. */
   --gradient-accent: linear-gradient(
-    90deg,
+    92deg,
     var(--primary) 0%,
-    color-mix(in oklab, var(--brand) 60%, var(--primary)) 55%,
+    var(--brand) 52%,
     var(--highlight) 100%
   );
-  --shadow-card: 0 1px 2px oklch(0.32 0.12 264 / 0.06),
-    0 10px 30px -18px oklch(0.32 0.12 264 / 0.28);
-  --shadow-lift: 0 18px 40px -18px oklch(0.32 0.12 264 / 0.4);
+  --shadow-card: 0 1px 2px oklch(0.21 0.034 263 / 0.07),
+    0 12px 32px -20px oklch(0.21 0.034 263 / 0.32);
+  --shadow-lift: 0 20px 44px -20px oklch(0.21 0.034 263 / 0.42);
 
   /* --- 3D stage tokens ------------------------------------------------
    * The story sections build depth out of four ingredients: a receding grid
-   * floor, soft aurora light sources, glass cards and a vignette. Each one is
-   * a token so light and dark stay a single design, not two.
+   * floor, soft aurora light sources, glass cards and a vignette. The three
+   * light sources are the logo's three colours, so the scenery is lit by the
+   * brand rather than tinted with something borrowed.
    */
-  --stage-bg: oklch(0.975 0.008 250);
+  --stage-bg: oklch(0.975 0.006 260);
   --stage-ink: var(--foreground);
-  --stage-grid: oklch(0.56 0.2 258 / 0.15);
-  --stage-glow-a: oklch(0.66 0.19 258 / 0.42);
-  --stage-glow-b: oklch(0.72 0.16 160 / 0.34);
-  --stage-glow-c: oklch(0.83 0.15 78 / 0.3);
+  --stage-grid: oklch(0.539 0.229 261 / 0.12);
+  --stage-glow-a: oklch(0.6 0.19 261 / 0.26);
+  --stage-glow-b: oklch(0.72 0.14 241 / 0.28);
+  --stage-glow-c: oklch(0.62 0.2 255 / 0.16);
   /* Near-opaque on light: a translucent white card over a near-white stage has
      almost no edge, and the glass reads as a rendering glitch rather than depth. */
-  --stage-card: oklch(1 0 0 / 0.9);
-  --stage-card-border: oklch(0.56 0.2 258 / 0.22);
-  --stage-card-shadow: 0 28px 60px -30px oklch(0.32 0.12 264 / 0.42);
+  --stage-card: oklch(1 0 0 / 0.92);
+  --stage-card-border: oklch(0.539 0.229 261 / 0.18);
+  --stage-card-shadow: 0 28px 60px -30px oklch(0.21 0.034 263 / 0.4);
   --stage-vignette: radial-gradient(
     120% 80% at 50% 40%,
-    transparent 40%,
-    oklch(0.56 0.06 258 / 0.1) 100%
+    transparent 45%,
+    oklch(0.45 0.06 262 / 0.1) 100%
   );
+
+  /*
+   * The footer has its own pair rather than borrowing --primary-dark /
+   * --primary-foreground. Those two move in opposite directions between the
+   * themes (on dark, --primary lightens so its foreground goes DARK), which
+   * left the footer painting dark text on a dark slab. The footer is the
+   * logo's navy in both themes, so it says so directly.
+   */
+  --footer-bg: oklch(0.165 0.03 263);
+  --footer-ink: oklch(0.97 0.006 260);
+  --footer-glow: oklch(0.5 0.2 261 / 0.55);
+  --footer-glow-2: oklch(0.66 0.16 241 / 0.32);
+  --footer-grid: oklch(0.8 0.09 250 / 0.07);
 }
 
 /*
@@ -125,62 +154,64 @@
  * used both for solid buttons and for text over the hero gradient.
  */
 .dark {
-  --background: oklch(0.17 0.02 262);
-  --foreground: oklch(0.95 0.006 250);
-  --card: oklch(0.21 0.024 262);
-  --card-foreground: oklch(0.95 0.006 250);
-  --popover: oklch(0.21 0.024 262);
-  --popover-foreground: oklch(0.95 0.006 250);
-  --primary: oklch(0.62 0.19 258);
-  --primary-foreground: oklch(0.99 0.004 250);
-  --primary-dark: oklch(0.13 0.022 262);
-  --secondary: oklch(0.225 0.026 262);
-  --secondary-foreground: oklch(0.9 0.018 255);
-  --muted: oklch(0.235 0.024 262);
-  --muted-foreground: oklch(0.7 0.026 258);
-  --accent: oklch(0.31 0.055 258);
-  --accent-foreground: oklch(0.93 0.03 255);
-  --highlight: oklch(0.82 0.15 78);
-  --highlight-foreground: oklch(0.2 0.05 70);
-  --brand: oklch(0.66 0.145 160);
-  --brand-foreground: oklch(0.15 0.02 160);
-  --destructive: oklch(0.62 0.22 27.3);
+  /* The dark theme is the logo's own navy, lifted just enough to sit under
+     text — #101828 is oklch(0.21 0.034 263). */
+  --background: oklch(0.185 0.03 263);
+  --foreground: oklch(0.96 0.007 260);
+  --card: oklch(0.232 0.032 263);
+  --card-foreground: oklch(0.96 0.007 260);
+  --popover: oklch(0.232 0.032 263);
+  --popover-foreground: oklch(0.96 0.007 260);
+  --primary: oklch(0.66 0.185 258);
+  --primary-foreground: oklch(0.15 0.03 263);
+  --primary-dark: oklch(0.15 0.028 263);
+  --secondary: oklch(0.26 0.034 262);
+  --secondary-foreground: oklch(0.9 0.02 258);
+  --muted: oklch(0.265 0.03 262);
+  --muted-foreground: oklch(0.745 0.025 260);
+  --accent: oklch(0.32 0.07 260);
+  --accent-foreground: oklch(0.93 0.03 256);
+  --highlight: oklch(0.74 0.145 240);
+  --highlight-foreground: oklch(0.16 0.03 263);
+  --brand: oklch(0.7 0.165 250);
+  --brand-foreground: oklch(0.16 0.03 260);
+  --destructive: oklch(0.62 0.19 27);
   --destructive-foreground: oklch(0.98 0.003 248);
-  --border: oklch(0.3 0.02 258);
-  --input: oklch(0.34 0.022 258);
-  --ring: oklch(0.62 0.14 258);
+  --border: oklch(0.33 0.028 260);
+  --input: oklch(0.36 0.03 260);
+  --ring: oklch(0.66 0.185 258);
 
   /* Keep the hero deep in dark mode instead of tracking the lighter --primary. */
   --gradient-hero: radial-gradient(
       140% 100% at 100% 0%,
-      color-mix(in oklab, var(--brand) 26%, oklch(0.28 0.1 258)) 0%,
+      oklch(0.45 0.16 248) 0%,
       transparent 52%
     ),
-    linear-gradient(140deg, oklch(0.14 0.025 262) 0%, oklch(0.3 0.11 258) 100%);
+    linear-gradient(140deg, oklch(0.16 0.03 263) 0%, oklch(0.36 0.15 259) 100%);
   --gradient-page: linear-gradient(
     140deg,
-    oklch(0.14 0.025 262) 0%,
-    oklch(0.28 0.1 258) 70%,
-    color-mix(in oklab, var(--brand) 55%, oklch(0.3 0.09 200)) 100%
+    oklch(0.16 0.03 263) 0%,
+    oklch(0.34 0.14 259) 65%,
+    oklch(0.48 0.13 243) 100%
   );
 
   /* Shadows read as depth on dark only when they are near-black and deeper. */
-  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4), 0 10px 30px -18px oklch(0 0 0 / 0.7);
-  --shadow-lift: 0 18px 40px -18px oklch(0 0 0 / 0.8);
+  --shadow-card: 0 1px 2px oklch(0 0 0 / 0.42), 0 12px 32px -20px oklch(0 0 0 / 0.72);
+  --shadow-lift: 0 20px 44px -20px oklch(0 0 0 / 0.82);
 
-  --stage-bg: oklch(0.135 0.022 262);
+  --stage-bg: oklch(0.155 0.028 263);
   --stage-ink: var(--foreground);
-  --stage-grid: oklch(0.72 0.15 258 / 0.16);
-  --stage-glow-a: oklch(0.55 0.21 262 / 0.55);
-  --stage-glow-b: oklch(0.6 0.16 168 / 0.4);
-  --stage-glow-c: oklch(0.7 0.15 60 / 0.28);
-  --stage-card: oklch(0.24 0.03 262 / 0.66);
-  --stage-card-border: oklch(0.78 0.1 258 / 0.18);
+  --stage-grid: oklch(0.74 0.11 252 / 0.14);
+  --stage-glow-a: oklch(0.47 0.21 262 / 0.5);
+  --stage-glow-b: oklch(0.55 0.16 240 / 0.36);
+  --stage-glow-c: oklch(0.42 0.18 258 / 0.3);
+  --stage-card: oklch(0.26 0.034 263 / 0.72);
+  --stage-card-border: oklch(0.8 0.08 255 / 0.17);
   --stage-card-shadow: 0 32px 70px -30px oklch(0 0 0 / 0.85);
   --stage-vignette: radial-gradient(
     120% 80% at 50% 40%,
-    transparent 35%,
-    oklch(0.08 0.02 262 / 0.75) 100%
+    transparent 38%,
+    oklch(0.1 0.025 263 / 0.72) 100%
   );
 }
 
@@ -363,6 +394,35 @@
   border: 1px solid color-mix(in oklab, var(--primary) 12%, var(--border));
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
+}
+
+/*
+ * Footer scenery: the logo's blue rising out of the bottom edge, the same grid
+ * the story sections stand on, over the navy. Same world as the heroes, just
+ * seen from below the horizon.
+ */
+@utility footer-surface {
+  background-color: var(--footer-bg);
+  color: var(--footer-ink);
+  background-image:
+    radial-gradient(80% 120% at 50% 118%, var(--footer-glow) 0%, transparent 62%),
+    radial-gradient(52% 90% at 88% 108%, var(--footer-glow-2) 0%, transparent 64%),
+    linear-gradient(to right, var(--footer-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--footer-grid) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 68px 68px, 68px 68px;
+}
+
+/*
+ * The footer wordmark. Roughly half its old size — at ~4.6vw the 16-character
+ * string sits near 48% of the viewport width, so it reads as a watermark
+ * behind the content rather than competing with the page. The mask fades its
+ * lower half into the glow so it never looks like cropped text.
+ */
+@utility footer-wordmark {
+  font-size: clamp(1.6rem, 4.6vw, 5rem);
+  opacity: 0.62;
+  -webkit-mask-image: linear-gradient(to bottom, black 22%, transparent 98%);
+  mask-image: linear-gradient(to bottom, black 22%, transparent 98%);
 }
 
 @utility media-frame {

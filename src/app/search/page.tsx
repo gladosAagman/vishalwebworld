@@ -20,8 +20,10 @@ export default function SearchPage() {
   return (
     <PageShell>
       <PageHero
+        motif="search"
+        caption="Sirf official portals · koi fake link nahi"
         eyebrow="Smart search"
-        title={<>Scheme ya service dhoondhna ab easy</>}
+        title="Scheme ya service dhoondhna ab easy"
         description="Google search ko government sites, schemes ya online forms tak focus karke accurate official results nikaliye."
       >
         <div className="max-w-3xl">

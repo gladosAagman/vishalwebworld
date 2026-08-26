@@ -20,8 +20,10 @@ export default function ServicesPage() {
   return (
     <PageShell>
       <PageHero
+        motif="services"
+        caption="24 services · 8 categories"
         eyebrow="Services"
-        title={<>Documents, banking, forms — sab ready</>}
+        title="Documents, banking, forms — sab ready"
         description="Search, filter aur direct WhatsApp karein. Hum official portals par accurate form filling aur application help dete hain."
       />
       <RevealText>Ek hi chhat ke neeche 24+ services — PAN, Aadhaar update, Samagra ID, Ayushman card, banking withdrawal aur exam forms. Aap document laayein, baaki sab hum sambhal lenge.</RevealText>

@@ -1,5 +1,6 @@
 import { ExternalLink, MessageSquareQuote, PenLine, Quote, Star } from "lucide-react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import {
   GOOGLE_ADDRESS,
   GOOGLE_RATING,
@@ -89,7 +90,7 @@ export function TestimonialsSection() {
         <div className="animate-fade-up text-center">
           <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             <MessageSquareQuote aria-hidden="true" className="h-3.5 w-3.5" />
-            Testimonials
+            <ShinyText text="Testimonials" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
           </span>
           <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
             Customers ka <span className="text-gradient">bharosa</span>

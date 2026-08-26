@@ -1,58 +1,29 @@
 "use client";
 
-import {
-  ArrowRight,
-  BadgeCheck,
-  Banknote,
-  FileText,
-  HeartPulse,
-  IdCard,
-  Landmark,
-  ScrollText,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, Sparkles } from "lucide-react";
 import { useEffect, useRef } from "react";
 
+import { FoldText } from "@/components/reactbits/FoldText";
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { GovSearch } from "@/components/site/GovSearch";
 import { StarButton } from "@/components/site/StarButton";
 import { waLink } from "@/components/site/whatsapp";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { loadGsap } from "@/lib/gsap";
+import { StageBackdrop } from "./StageBackdrop";
+import { chipsFrom, StageChips } from "./StageChips";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
 
-/*
- * Chips drifting along the floor behind the copy. They are kept to the band
- * below the content so they never collide with the headline or the media card —
- * the stage reads as atmosphere there, and as clutter anywhere else.
- *
- * `z` is their depth in px and is kept negative:
- * a perspective projection pushes positive-Z elements *outward* from the vanishing
- * point, which walks anything near an edge straight off the screen. Sitting them
- * behind the front plane keeps them inside the frame and lets the copy read as
- * the nearest layer.
- */
-const chips = [
-  { label: "Ayushman Card", icon: HeartPulse, z: -180, top: "88%", left: "7%" },
-  { label: "Samagra ID", icon: IdCard, z: -300, top: "96%", left: "26%" },
-  { label: "Cash Withdrawal", icon: Banknote, z: -420, top: "90%", left: "46%" },
-  { label: "PAN Card", icon: FileText, z: -240, top: "97%", left: "66%" },
-  { label: "Khasra / Khatauni", icon: Landmark, z: -360, top: "86%", left: "80%" },
-  { label: "Exam Form", icon: ScrollText, z: -140, top: "94%", left: "3%" },
-] as const;
-
-/**
- * Depth of field: the further back a chip sits, the dimmer and softer it gets.
- * Without this the chips all read as equally present and the stage looks like
- * flat stickers rather than a scene with air in it.
- */
-function depthCue(z: number) {
-  const depth = Math.min(1, Math.abs(z) / 480);
-  return {
-    ["--chip-opacity" as string]: (0.9 - depth * 0.35).toFixed(2),
-    ["--chip-blur" as string]: `${(depth * 2.2).toFixed(1)}px`,
-  };
-}
+/** Six services, dropped into the shared floor slots. */
+const chips = chipsFrom([
+  { label: "Ayushman Card", icon: "HeartPulse" },
+  { label: "Samagra ID", icon: "IdCard" },
+  { label: "Cash Withdrawal", icon: "Banknote" },
+  { label: "PAN Card", icon: "FileText" },
+  { label: "Khasra / Khatauni", icon: "Landmark" },
+  { label: "Exam Form", icon: "ScrollText" },
+]);
 
 const stats = [
   ["24+", "Services"],
@@ -67,9 +38,7 @@ const stats = [
  */
 export function StoryHero() {
   const stageRef = useRef<HTMLElement>(null);
-  const depthRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
-  const floorRef = useRef<HTMLDivElement>(null);
 
   useStagePointer(stageRef);
 
@@ -85,6 +54,28 @@ export function StoryHero() {
       if (cancelled) return;
 
       const context = gsap.context(() => {
+        // Cinematic entry. The chips arrive from far behind the front plane and
+        // the copy settles out of a slight push-in, so the first thing the page
+        // does is establish that this is a stage with depth — before any
+        // scrolling has happened. It runs once, off the scroll timeline, so a
+        // visitor who never scrolls still sees the scene assemble.
+        const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+        intro.from(stage.querySelectorAll(".chip-3d"), {
+          z: -900,
+          opacity: 0,
+          duration: 1.1,
+          stagger: { each: 0.08, from: "random" },
+        });
+
+        intro.from(
+          copyRef.current,
+          { y: 26, scale: 1.03, opacity: 0, duration: 0.9 },
+          0,
+        );
+
+        intro.from(stage.querySelector(".stage-torch"), { opacity: 0, duration: 1.4 }, 0.2);
+
         const scrollTrigger = {
           trigger: stage,
           start: "top top",
@@ -94,24 +85,31 @@ export function StoryHero() {
 
         // Camera push: the depth layer travels toward the viewer and the copy
         // recedes, which reads as flying past the chips rather than sliding them.
-        gsap.to(depthRef.current, {
+        gsap.to(stage.querySelector(".stage-depth"), {
           z: 620,
           opacity: 0,
           ease: "none",
+          immediateRender: false,
           scrollTrigger,
         });
 
+        // immediateRender: false matters here. The intro above starts the copy
+        // from opacity 0; a scrubbed tween created straight after would capture
+        // that hidden state as its own start value and the copy would never
+        // come back. Deferring the capture until the tween first renders means
+        // it starts from wherever the intro left the copy.
         gsap.to(copyRef.current, {
           y: -70,
           scale: 0.94,
           opacity: 0.15,
           ease: "none",
+          immediateRender: false,
           scrollTrigger,
         });
 
         // The floor is a repeating background, so shifting it is a texture
         // offset rather than a transform — no layer to composite.
-        gsap.to(floorRef.current, {
+        gsap.to(stage.querySelector(".stage-floor"), {
           "--floor-shift": 6,
           ease: "none",
           scrollTrigger,
@@ -134,35 +132,24 @@ export function StoryHero() {
       data-no-split
       className="stage flex min-h-[92svh] items-center"
     >
-      <div aria-hidden="true" className="stage-aurora">
-        <span />
-        <span />
-        <span />
-      </div>
-      <div ref={floorRef} aria-hidden="true" className="stage-floor" />
-
-      <div ref={depthRef} aria-hidden="true" className="stage-depth hidden md:block">
-        {chips.map(({ label, icon: Icon, z, top, left }) => (
-          <span
-            key={label}
-            className="chip-3d"
-            style={{ top, left, ["--z" as string]: z, ...depthCue(z) }}
-          >
-            <Icon aria-hidden="true" />
-            {label}
-          </span>
-        ))}
-      </div>
+      <StageBackdrop showcase />
+      <StageChips chips={chips} />
 
       <div className="stage-content mx-auto grid w-full max-w-6xl gap-10 px-4 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div ref={copyRef}>
           <span className="inline-flex items-center gap-2 rounded-full border border-[var(--stage-card-border)] bg-[var(--stage-card)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] backdrop-blur">
             <Sparkles aria-hidden="true" className="h-3.5 w-3.5 text-highlight" />
-            CSC 2.0 · Digital India
+            <ShinyText
+              text="CSC 2.0 · Digital India"
+              color="currentColor"
+              shineColor="var(--highlight)"
+              speed={3}
+              delay={1.2}
+            />
           </span>
 
           <h1 className="mt-6 font-display text-[clamp(2.4rem,7vw,4.25rem)] font-bold leading-[1.03] tracking-[-0.03em]">
-            Sarkari kaam,
+            <FoldText text="Sarkari kaam," splitBy="char" hinge="top" stagger={0.035} />
             <br />
             <span className="text-gradient">simple &amp; online</span>
           </h1>

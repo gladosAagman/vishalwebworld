@@ -22,8 +22,10 @@ export default function ContactPage() {
   return (
     <PageShell>
       <PageHero
+        motif="contact"
+        caption="7 days open · WhatsApp par reply"
         eyebrow="Contact"
-        title={<>WhatsApp par details bhejiye</>}
+        title="WhatsApp par details bhejiye"
         description={`Direct message ke liye number ${WHATSAPP_DISPLAY}. Form submit karte hi pre-filled WhatsApp message open hoga.`}
       />
       <RevealText>Ek WhatsApp message, aur kaam shuru. Naam, service aur zaroori documents bhejiye — hum turant batayenge kya lagega aur kitna time.</RevealText>

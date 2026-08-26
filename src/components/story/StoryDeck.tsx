@@ -4,8 +4,10 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { services } from "@/data/services";
 import { loadGsap } from "@/lib/gsap";
+import { StageBackdrop } from "./StageBackdrop";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
 
@@ -81,17 +83,12 @@ export function StoryDeck() {
   return (
     <div ref={shellRef} className="pin-shell" style={{ ["--pin-length" as string]: "300vh" }}>
       <section ref={frameRef} id="services" data-no-split className="pin-frame stage">
-        <div aria-hidden="true" className="stage-aurora">
-          <span />
-          <span />
-          <span />
-        </div>
-        <div aria-hidden="true" className="stage-floor" />
+        <StageBackdrop />
 
         <div className="stage-content mx-auto w-full max-w-6xl px-4">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              Our services
+              <ShinyText text="Our services" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
             </span>
             <h2 className="mt-2 font-display text-[clamp(1.8rem,4.4vw,3rem)] font-bold leading-[1.05] tracking-[-0.025em]">
               Har kaam ke liye <span className="text-gradient">ek hi jagah</span>

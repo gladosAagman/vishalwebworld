@@ -1,23 +1,16 @@
-import { ScrollReveal } from "@/components/ScrollReveal";
+import { StatementReveal } from "@/components/story/StatementReveal";
 
 type RevealTextProps = {
   children: string;
   className?: string;
+  eyebrow?: string;
 };
 
-/** Section-level statement text with GSAP scroll-linked word reveal. */
-export function RevealText({ children, className = "" }: RevealTextProps) {
+/** Section-level statement copy with the line-by-line reveal. */
+export function RevealText({ children, className = "", eyebrow }: RevealTextProps) {
   return (
-    <section className={`mx-auto max-w-5xl px-4 py-14 sm:py-20 ${className}`}>
-      <ScrollReveal
-        baseOpacity={0}
-        baseRotation={4}
-        blurStrength={5}
-        containerClassName="!my-0"
-        textClassName="text-balance font-display text-foreground"
-      >
-        {children}
-      </ScrollReveal>
-    </section>
+    <StatementReveal className={className} {...(eyebrow ? { eyebrow } : {})}>
+      {children}
+    </StatementReveal>
   );
 }

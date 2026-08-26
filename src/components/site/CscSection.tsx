@@ -1,3 +1,6 @@
+import { FoldText } from "@/components/reactbits/FoldText";
+import { ShinyText } from "@/components/reactbits/ShinyText";
+
 const facts = [
   ["2.50 lakh", "Gram Panchayats targeted for a CSC"],
   ["Aug 2015", "CSC 2.0 project launched"],
@@ -11,9 +14,17 @@ export function CscSection() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="animate-fade-up">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            About the programme
+            <ShinyText text="About the programme" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.6} />
           </span>
-          <h2 className="mt-2 text-2xl font-bold sm:text-4xl">CSC 2.0 — A way forward</h2>
+          <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
+            <FoldText
+              text="CSC 2.0 — A way forward"
+              splitBy="char"
+              hinge="bottom"
+              trigger="scroll"
+              stagger={0.03}
+            />
+          </h2>
           <div className="accent-bar mt-4 h-1 w-24 rounded-full" />
           <div className="mt-5 space-y-4 text-sm leading-relaxed text-secondary-foreground sm:text-base">
             <p>

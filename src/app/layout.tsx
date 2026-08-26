@@ -1,23 +1,31 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { SiteChrome } from "@/components/site/SiteChrome";
 
 import "./globals.css";
 
-/** Body/UI face: neutral, highly legible at small sizes, strong numerals. */
+/**
+ * Body/UI face. Inter is the workhorse for dense, small text: large x-height,
+ * unambiguous 1/l/I and rl pairs, and tabular numerals for IDs and amounts.
+ */
 const sans = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans-loaded",
 });
 
-/** Headline face: geometric and confident, pairs cleanly with Inter. */
-const display = Sora({
+/**
+ * Headline face. Plus Jakarta Sans is a humanist grotesque — squarer and more
+ * corporate than a geometric display face, which suits a services business
+ * better, and it stays readable at heading sizes in Hinglish copy where words
+ * are long and unfamiliar.
+ */
+const display = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
   variable: "--font-display-loaded",
 });
 

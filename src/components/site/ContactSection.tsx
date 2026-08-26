@@ -3,10 +3,10 @@
 import { Phone } from "lucide-react";
 import { useState } from "react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { services } from "@/data/services";
 import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
 import { WhatsAppButton } from "./WhatsAppButton";
-
 
 export function ContactSection() {
   const defaultService = services[0]?.name ?? "Online Service";
@@ -32,7 +32,7 @@ export function ContactSection() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-2">
         <div className="animate-fade-up">
           <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-            Get in touch
+            <ShinyText text="Get in touch" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
           </span>
           <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
             Request a service in 30 seconds

@@ -20,8 +20,10 @@ export default function SchemesPage() {
   return (
     <PageShell>
       <PageHero
+        motif="schemes"
+        caption="Eligibility check · form · status follow-up"
         eyebrow="Schemes"
-        title={<>Yojana eligibility aur apply help</>}
+        title="Yojana eligibility aur apply help"
         description="Popular schemes ke benefit, eligibility aur official portal links ek clean page par. Apply karne ke liye direct WhatsApp karein."
       />
       <RevealText>Har yojana ka fayda tabhi milta hai jab sahi documents ke saath sahi time par apply ho. Hum eligibility check karte hain, form bharte hain aur status tak follow-up karte hain.</RevealText>

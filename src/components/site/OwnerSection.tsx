@@ -1,5 +1,6 @@
 import { BadgeCheck, Sparkles } from "lucide-react";
 
+import { ShinyText } from "@/components/reactbits/ShinyText";
 import { waLink } from "./whatsapp";
 import { WhatsAppButton } from "./WhatsAppButton";
 
@@ -23,7 +24,7 @@ export function OwnerSection() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/assets/owner-portrait.jpg"
-              alt="Vishal Web World ke owner, digital services centre par"
+              alt="Vishal Yadav — Vishal Web World ke owner, digital services centre par"
               loading="lazy"
                 decoding="async"
               className="relative w-full rounded-[2rem] object-cover shadow-[var(--shadow-lift)] transition-transform duration-500 hover:-translate-y-1 hover:rotate-1"
@@ -34,11 +35,14 @@ export function OwnerSection() {
         <div className="animate-fade-up [animation-delay:120ms]">
           <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
-            Meet the owner
+            <ShinyText text="Meet the owner" color="currentColor" shineColor="var(--highlight)" speed={3} delay={1.5} />
           </span>
           <h2 className="mt-2 text-2xl font-bold sm:text-4xl">
             Aapka apna <span className="text-gradient">digital saathi</span>
           </h2>
+          <p className="mt-2 text-lg font-semibold text-foreground sm:text-xl">
+            Vishal Yadav
+          </p>
           <p className="mt-3 text-sm text-muted-foreground sm:text-base">
             Vishal Web World ek CSC-style digital seva centre hai. Har kaam
             khud dekhte hain — bharosa, speed aur clear guidance ke saath. Koi

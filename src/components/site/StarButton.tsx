@@ -17,24 +17,25 @@ type StarButtonProps<T extends ElementType = "button"> = {
 } & Omit<ComponentPropsWithoutRef<T>, "as" | "variant" | "size" | "href" | "to" | "children">;
 
 
+/** Border-glow colours track the logo ramp (see the palette note in globals.css). */
 const variantStyles: Record<Variant, { color: string; inner: string }> = {
   brand: {
-    color: "oklch(0.63 0.145 160)",
+    color: "oklch(0.61 0.202 255)",
     inner:
       "bg-brand text-brand-foreground hover:bg-brand/90 shadow-[var(--shadow-lift)]",
   },
   primary: {
-    color: "oklch(0.54 0.18 258)",
+    color: "oklch(0.539 0.229 261)",
     inner:
       "bg-primary text-primary-foreground hover:bg-primary/90 shadow-[var(--shadow-lift)]",
   },
   outline: {
-    color: "oklch(0.54 0.18 258 / 0.7)",
+    color: "oklch(0.539 0.229 261 / 0.7)",
     inner:
       "border-primary/30 bg-primary/10 text-primary hover:bg-primary/15 hover:border-primary/40",
   },
   ghost: {
-    color: "oklch(0.55 0.028 258 / 0.5)",
+    color: "oklch(0.5 0.03 262 / 0.5)",
     inner:
       "bg-transparent text-muted-foreground hover:bg-accent hover:text-accent-foreground",
   },

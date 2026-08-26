@@ -20,11 +20,10 @@ const REVEAL_SELECTOR =
  * per-word spans, which meant ~100 extra separately-transitioning elements per
  * page; measured on a 4x-throttled scroll that roughly doubled dropped frames
  * (25% -> 52%) for the same scroll.
- * Works on every page because it lives inside PageShell and re-scans on navigation.
  *
- * Everything here is deliberately kept off React's render path: the progress bar
- * is written straight to the DOM inside a rAF, and the page height is cached
- * rather than re-read per scroll event (reading scrollHeight forces layout).
+ * SAFETY: this effect hides content that the server already rendered, so any
+ * failure to un-hide it shows the visitor a blank page. Everything below is
+ * built so that cannot happen — see `sweep` and the unmount handler.
  */
 export function ScrollFx() {
   const pathname = usePathname();
@@ -65,62 +64,71 @@ export function ScrollFx() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    /** Everything currently hidden and waiting to be revealed. */
+    const waiting = new Set<HTMLElement>();
+
+    const reveal = (el: HTMLElement) => {
+      el.dataset["revealState"] = "in";
+      waiting.delete(el);
+      observer.unobserve(el);
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          const el = entry.target as HTMLElement;
-          el.dataset['revealState'] = "in";
-          observer.unobserve(el);
+          if (entry.isIntersecting) reveal(entry.target as HTMLElement);
         }
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.06 },
     );
 
-    // Anything already on screen must not depend on the IntersectionObserver:
-    // its callback can be starved for seconds during hydration on a slow first
-    // load, which would leave the page looking blank. Mark those "out" now and
-    // flip them "in" immediately so they still animate, but are guaranteed
-    // visible. Only genuinely off-screen elements get observed.
-    const pending: HTMLElement[] = [];
-
-    const track = (el: HTMLElement) => {
-      el.dataset['revealState'] = "out";
-      if (el.getBoundingClientRect().top < window.innerHeight) {
-        pending.push(el);
-      } else {
-        observer.observe(el);
+    /*
+     * The guarantee. IntersectionObserver is the cheap path, but it can be
+     * starved during hydration, and it never fires for an element that was
+     * laid out only after it was observed. This pass re-checks the waiting set
+     * against the viewport directly, so anything the visitor can actually see
+     * is revealed no matter what the observer did. It runs at most once per
+     * frame and stops scheduling itself once nothing is waiting.
+     */
+    let sweepFrame = 0;
+    const sweep = () => {
+      sweepFrame = 0;
+      if (!waiting.size) return;
+      const limit = window.innerHeight;
+      for (const el of [...waiting]) {
+        const rect = el.getBoundingClientRect();
+        // Zero-sized means the element is not being rendered at all right now
+        // (the usual case: it sits inside a collapsed <details>). Hiding it
+        // would leave the panel blank when the visitor opens it, so release it.
+        if (rect.width === 0 && rect.height === 0) {
+          reveal(el);
+          continue;
+        }
+        if (rect.top < limit && rect.bottom > 0) reveal(el);
       }
     };
 
-    const flushPending = () => {
-      if (!pending.length) return;
-      const batch = pending.splice(0, pending.length);
-      let done = false;
-      const reveal = () => {
-        if (done) return;
-        done = true;
-        for (const el of batch) el.dataset['revealState'] = "in";
-      };
-      // rAF gives the smoothest result, but it can be starved for over a second
-      // while the page hydrates on a slow device — measured at 1.24s on a 4x
-      // throttled first load, which reads as a blank page. Race it against a
-      // timer (which is not frame-bound) so content never waits on a frame.
-      requestAnimationFrame(reveal);
-      window.setTimeout(reveal, 60);
+    const scheduleSweep = () => {
+      if (!sweepFrame && waiting.size) sweepFrame = requestAnimationFrame(sweep);
+    };
+
+    const track = (el: HTMLElement) => {
+      el.dataset["revealState"] = "out";
+      waiting.add(el);
+      observer.observe(el);
     };
 
     const prepare = () => {
       document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach((el) => {
-        if (el.dataset['revealState']) return;
-        // RevealText runs its own GSAP word animation; leave it alone.
+        if (el.dataset["revealState"]) return;
+        // RevealText / the 3D story run their own animations; leave them alone.
         if (el.closest("[data-no-split]")) return;
         el.classList.remove("animate-fade-up", "animate-pop");
         el.classList.add("reveal");
         track(el);
       });
 
-      flushPending();
+      sweep();
     };
 
     // prepare() rewrites the DOM, which would re-trigger the observer. Detach
@@ -141,29 +149,32 @@ export function ScrollFx() {
     // let the route content paint first
     const id = window.setTimeout(runPrepare, 30);
 
-    // Last-resort sweep for a slow first load. One-shot timers rather than an
-    // interval: each pass calls getBoundingClientRect on every hidden element,
-    // which forces layout — cheap once at startup, but measurable jank if it
-    // keeps firing while the user scrolls.
-    const sweep = () => {
-      document
-        .querySelectorAll<HTMLElement>('[data-reveal-state="out"]')
-        .forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            el.dataset['revealState'] = "in";
-            observer.unobserve(el);
-          }
-        });
-    };
-    const sweeps = [400, 1200, 2500].map((delay) => window.setTimeout(sweep, delay));
+    window.addEventListener("scroll", scheduleSweep, { passive: true });
+    window.addEventListener("resize", scheduleSweep);
+    // A closed <details> opening, an image finishing, a filter re-rendering —
+    // all change what is on screen without a scroll event.
+    window.addEventListener("toggle", scheduleSweep, true);
+    window.addEventListener("load", scheduleSweep, true);
+
+    // Last-resort passes for a very slow first load, before the visitor has
+    // scrolled at all.
+    const timers = [400, 1200, 2500].map((delay) => window.setTimeout(sweep, delay));
 
     return () => {
       window.clearTimeout(id);
-      sweeps.forEach(window.clearTimeout);
+      timers.forEach(window.clearTimeout);
       if (scheduled) cancelAnimationFrame(scheduled);
+      if (sweepFrame) cancelAnimationFrame(sweepFrame);
       mutation.disconnect();
       observer.disconnect();
+      window.removeEventListener("scroll", scheduleSweep);
+      window.removeEventListener("resize", scheduleSweep);
+      window.removeEventListener("toggle", scheduleSweep, true);
+      window.removeEventListener("load", scheduleSweep, true);
+      // Nothing is watching these any more, so leaving one hidden would hide it
+      // for good. Anything still waiting becomes visible.
+      for (const el of waiting) el.dataset["revealState"] = "in";
+      waiting.clear();
     };
   }, [pathname]);
 
