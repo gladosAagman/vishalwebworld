@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { addressLines, business } from "@/data/business";
 import { SiteLogo } from "./SiteLogo";
 import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
 import { WhatsAppButton } from "./WhatsAppButton";
@@ -27,8 +28,8 @@ export function SiteFooter() {
             fallbackClassName="inline-block rounded-xl bg-white px-3 py-2 text-lg text-slate-900"
           />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-[color-mix(in_oklab,var(--footer-ink)_72%,transparent)]">
-            Your trusted digital services centre. Sarkari kaam, forms aur banking,
-            sab ek jagah.
+            {business.tagline}. Sarkari kaam, forms, banking aur travel booking —
+            sab ek jagah — har service 1 din mein. {business.promises.join(" · ")}.
           </p>
         </div>
 
@@ -58,8 +59,18 @@ export function SiteFooter() {
             WhatsApp / Call: {WHATSAPP_DISPLAY}
           </p>
           <p className="mt-2 text-sm text-[color-mix(in_oklab,var(--footer-ink)_72%,transparent)]">
+            Email: {business.email}
+          </p>
+          <p className="mt-2 text-sm text-[color-mix(in_oklab,var(--footer-ink)_72%,transparent)]">
             Hours: 9:00 AM – 8:00 PM (all days)
           </p>
+          <address className="mt-2 text-sm not-italic leading-relaxed text-[color-mix(in_oklab,var(--footer-ink)_72%,transparent)]">
+            {addressLines.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
+          </address>
           <WhatsAppButton
             href={waLink("Namaste Vishal Web World! Mujhe online service help chahiye.")}
             size="sm"

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, ExternalLink, FileText } from "lucide-react";
+import { CheckCircle2, ExternalLink, FileText, Info, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { services } from "@/data/services";
@@ -58,6 +58,12 @@ export function DocumentsList() {
                   {service.category}
                 </span>
               </div>
+              {service.oneDay && (
+                <span className="ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/10 px-2.5 py-1 text-[11px] font-bold text-brand">
+                  <Zap aria-hidden="true" className="h-3 w-3" />
+                  1 Day
+                </span>
+              )}
             </div>
 
             <ul className="mt-4 flex-1 space-y-2">
@@ -71,6 +77,13 @@ export function DocumentsList() {
                 </li>
               ))}
             </ul>
+
+            {service.note && (
+              <p className="mt-4 flex items-start gap-2 rounded-lg bg-accent/40 p-3 text-xs leading-relaxed text-muted-foreground">
+                <Info aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
+                <span>{service.note}</span>
+              </p>
+            )}
 
             <div className="mt-5 flex flex-wrap gap-2">
               <WhatsAppButton

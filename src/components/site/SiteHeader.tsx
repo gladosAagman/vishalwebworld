@@ -6,11 +6,13 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import GlassSurface from "@/components/GlassSurface";
+
 import { Button } from "@/components/ui/button";
+import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
 import { SiteLogo } from "./SiteLogo";
 import { ThemeToggle } from "./ThemeToggle";
-import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
 import { WhatsAppButton } from "./WhatsAppButton";
+
 
 const nav = [
   { label: "Home", to: "/" },
@@ -22,11 +24,6 @@ const nav = [
   { label: "Search", to: "/search" },
   { label: "Contact", to: "/contact" },
 ] as const;
-
-/** Matches TanStack's activeOptions: exact match for "/", prefix match otherwise. */
-function isActive(pathname: string, to: string) {
-  return to === "/" ? pathname === "/" : pathname.startsWith(to);
-}
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -52,7 +49,7 @@ export function SiteHeader() {
         blur={12}
         displace={0.6}
         distortionScale={-140}
-        className={`w-full border border-white/50 transition-all duration-300 dark:border-white/10 ${scrolled ? "shadow-[var(--shadow-card)]" : ""}`}
+        className={`w-full border border-white/50 transition-all duration-300 ${scrolled ? "shadow-[var(--shadow-card)]" : ""}`}
       >
       <div className="flex w-full items-center gap-3 px-3 sm:px-4">
 
@@ -64,8 +61,8 @@ export function SiteHeader() {
         >
           <SiteLogo
             priority
-            className="h-10 w-auto shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-12 dark:rounded-lg dark:bg-white/90 dark:px-2 dark:py-1"
-            fallbackClassName="text-lg sm:text-xl"
+            className="h-10 w-auto shrink-0 rounded-xl bg-white px-2 py-1 object-contain transition-transform duration-300 group-hover:scale-[1.03] sm:h-12"
+            fallbackClassName="rounded-xl bg-white px-3 py-2 text-sm text-slate-900"
           />
         </Link>
 
@@ -75,11 +72,13 @@ export function SiteHeader() {
               <li key={item.to}>
                 <Link
                   href={item.to}
-                  className={`block whitespace-nowrap rounded-full px-3 py-2 font-medium leading-none transition-all duration-300 hover:-translate-y-0.5 ${
-                    isActive(pathname, item.to)
+                  className={[
+                    "block whitespace-nowrap rounded-full px-3 py-2 font-medium leading-none transition-all duration-300 hover:-translate-y-0.5",
+                    pathname === item.to || (item.to !== "/" && pathname.startsWith(item.to))
                       ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                  }`}
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                  ].join(" ")}
+
                 >
                   {item.label}
                 </Link>
@@ -88,7 +87,7 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <ThemeToggle className="ml-auto lg:ml-0" />
+        <ThemeToggle className="ml-auto lg:ml-2" />
 
         <WhatsAppButton
           href={waLink("Namaste Vishal Web World! Mujhe ek service ke baare mein help chahiye.")}
@@ -124,11 +123,12 @@ export function SiteHeader() {
                 <Link
                   href={item.to}
                   onClick={() => setOpen(false)}
-                  className={`block rounded-lg px-3 py-2 font-medium transition-colors ${
-                    isActive(pathname, item.to)
+                  className={[
+                    "block rounded-lg px-3 py-2 font-medium transition-colors",
+                    pathname === item.to || (item.to !== "/" && pathname.startsWith(item.to))
                       ? "bg-accent text-accent-foreground"
-                      : "text-foreground hover:bg-accent"
-                  }`}
+                      : "text-foreground hover:bg-accent",
+                  ].join(" ")}
                 >
                   {item.label}
                 </Link>

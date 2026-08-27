@@ -6,9 +6,18 @@ export type Service = {
   link: string;
   /** Zaroori documents / checklist for this service */
   docs: string[];
+  /**
+   * Same-day delivery. Har service default me 1-day hai; sirf tab `false`
+   * likhein jab koi kaam genuinely zyada waqt le (department ki apni timeline).
+   */
+  oneDay?: boolean;
+  /** Benefits / process points — short bullet lines. */
+  highlights?: string[];
+  /** Fee, last date ya eligibility jaisi important note. */
+  note?: string;
 };
 
-export const services: Service[] = [
+const catalogue: Service[] = [
   {
     id: 1,
     name: "Samagra ID",
@@ -99,18 +108,25 @@ export const services: Service[] = [
   },
   {
     id: 7,
-    name: "Marriage Certificate",
-    desc: "Marriage registration apply aur certificate download.",
+    name: "Marriage Registration / Certificate",
+    desc: "Vivah panjiyan ke documents, affidavit aur certificate — poora kaam.",
     category: "Documents",
     link: "https://mpenagarpalika.gov.in/",
     docs: [
-      "Dono ka Aadhaar card",
-      "Dono ke passport size photo + joint photo",
-      "Age proof (10th marksheet / birth certificate)",
-      "Shaadi ka card ya proof",
-      "2 witnesses ke Aadhaar aur photo",
-      "Address proof",
-      "Affidavit (agar zaroori ho)",
+      "Var aur vadhu ki 4-4 passport size photo",
+      "Var-vadhu ki 10th marksheet ya PAN card / birth certificate",
+      "Var-vadhu ka address proof",
+      "Var-vadhu ke shapath patra (affidavit)",
+      "Var-vadhu ki Samagra ID",
+      "Shaadi ka card",
+      "Vivah ki photo — maang, phere, jaimala aur group photo",
+      "Pandit ji ka pramaan patra aur unki ID",
+      "Dono pakshon ke 2-2 gawah (witness) ki ID",
+      "Shaadi ke 30 din baad aavedan par gap shapath patra (₹100 ke stamp par)",
+    ],
+    highlights: [
+      "Affidavit aur gap shapath patra ki drafting bhi yahin",
+      "Photo aur document set ready karke online submission",
     ],
   },
   {
@@ -210,8 +226,8 @@ export const services: Service[] = [
   },
   {
     id: 15,
-    name: "Vehicle Insurance",
-    desc: "Bike, car aur commercial vehicle insurance — instant.",
+    name: "Car & Bike Insurance",
+    desc: "Suraksha aaj, sukoon kal — car, bike aur commercial vehicle insurance instant.",
     category: "Insurance",
     link: "https://parivahan.gov.in/",
     docs: [
@@ -222,11 +238,17 @@ export const services: Service[] = [
       "Vehicle ke photo (break-in case)",
       "Mobile number aur email id",
     ],
+    highlights: [
+      "Accident, chori, aag aur prakritik aapda cover",
+      "Third party liability cover",
+      "Cashless claim suvidha",
+      "Best cover, best price — quick claim, easy process",
+    ],
   },
   {
     id: 16,
-    name: "PF Work",
-    desc: "EPF claim, KYC, UAN aur pension related kaam.",
+    name: "EPF / PF Work",
+    desc: "EPF ke sabhi kaam — naya registration, claim, KYC, correction aur pension.",
     category: "Workers",
     link: "https://unifiedportal-mem.epfindia.gov.in/memberinterface/",
     docs: [
@@ -237,6 +259,18 @@ export const services: Service[] = [
       "Date of exit aur company detail",
       "Form 15G (tax ke liye, agar lage)",
     ],
+    highlights: [
+      "Naya EPF registration aur UAN activation",
+      "EPF / PF withdrawal aur online claim",
+      "KYC update — mobile, email, Aadhaar, PAN, bank",
+      "Advance claim — housing, medical, education, marriage",
+      "Naam, pita ka naam, DOB, gender, marital status correction",
+      "EPF balance check aur passbook download",
+      "Company / establishment registration",
+      "Claim status tracking aur samasya samadhan",
+      "Member joining / leaving (joiner-leaver) entry",
+    ],
+    note: "100% surakshit aur gopniya seva — ek hi jagah sabhi EPF samadhan.",
   },
   {
     id: 17,
@@ -268,6 +302,11 @@ export const services: Service[] = [
       "Annexure / affidavit (case ke hisaab se)",
       "Mobile number aur email id",
     ],
+    highlights: [
+      "Naya passport, re-issue aur tatkaal — dono booklet size",
+      "Appointment booking aur form filling",
+    ],
+    note: "Nayi fees 01 July 2026 se: 36 page normal ₹2,500 (pehle ₹1,500), 60 page normal ₹3,500 (pehle ₹2,000), 36 page tatkaal ₹5,000 (pehle ₹3,500), 60 page tatkaal ₹6,000 (pehle ₹4,000). Jaldi aavedan karein aur badhi hui fees se bachein.",
   },
   {
     id: 19,
@@ -328,6 +367,13 @@ export const services: Service[] = [
       "Gumasta / Shop & Establishment licence",
       "Bank passbook ya cancelled cheque",
     ],
+    highlights: [
+      "ONE DAY GST CERTIFICATE — ek din mein taiyaar",
+      "100% genuine, govt. approved certificate",
+      "Vyakti, firm aur company — sabke liye",
+      "Minimum documents, easy online process",
+      "Business ki kanooni pehchaan aur customer ka bharosa",
+    ],
   },
   {
     id: 23,
@@ -372,13 +418,252 @@ export const services: Service[] = [
       "Pen drive, email ya WhatsApp par file",
       "Size aur colour ki requirement",
     ],
+    highlights: [
+      "Printout aur photocopy",
+      "Colour print",
+      "Lamination",
+      "Passport size photo",
+      "Document upload aur online submission",
+    ],
+  },
+  {
+    id: 26,
+    name: "ITR Filing",
+    desc: "Income Tax Return filing — expert review, fast submission, 1 din mein acknowledgement.",
+    category: "Finance",
+    link: "https://www.incometax.gov.in/iec/foportal/",
+    docs: [
+      "PAN card",
+      "Aadhaar card",
+      "Bank account details aur IFSC code",
+      "Form 16 — salaried logon ke liye",
+      "Form 26AS",
+      "Investment proof — LIC, PPF, Section 80C etc.",
+      "Home loan certificate (agar applicable ho)",
+      "Pichhle saal ki ITR copy (agar available ho)",
+    ],
+    highlights: [
+      "Expert review aur fast submission",
+      "Immediate acknowledgement (Form V)",
+      "Loan aur credit card approval mein aasani",
+      "Visa application ke liye zaroori document",
+      "Excess TDS ka refund claim",
+      "Income ka valid proof aur penalty se bachaav",
+    ],
+    note: "Last date yaad rakhein: 31.07.2026. Urgent requirement? 1-day service available hai.",
+  },
+  {
+    id: 27,
+    name: "EWS Certificate",
+    desc: "Aarthik roop se kamzor varg (EWS) pramaan patra — seamless processing, prompt issuance.",
+    category: "Documents",
+    link: "https://mpedistrict.gov.in/",
+    docs: [
+      "Aavedak ka Aadhaar card / Voter ID",
+      "Parivaar ke sabhi sadasyon ka Aadhaar card / Voter ID",
+      "Aay pramaan patra (varshik aay ₹8,00,000 se kam)",
+      "Mool nivasi pramaan patra",
+      "Bhoomi / sampatti ke dastavez — khasra, B-1, registry etc.",
+      "Passport size photo",
+      "Sva-ghoshna patra (self declaration)",
+      "10th ki anksuchi (marksheet)",
+      "Pati / pita ka Aadhaar card",
+      "Parivaar ki kul varshik aay ka vivaran — vetan, krishi, vyapaar aur anya srot",
+    ],
+    highlights: [
+      "Seamless processing aur dedicated assistance",
+      "Prompt issuance — 1 din mein",
+    ],
+    note: "EWS ke liye parivaar ki kul varshik aay ₹8 lakh se kam aur nirdharit sampatti seema ke andar honi chahiye.",
+  },
+  {
+    id: 28,
+    name: "Bank Account Opening",
+    desc: "Bank of Baroda ka khata ek din mein — aasan process, kam documents.",
+    category: "Finance",
+    link: "https://www.bankofbaroda.in/",
+    docs: [
+      "Aadhaar card (mobile linked)",
+      "PAN card",
+      "2 passport size photo",
+      "Address proof (bijli bill / rent agreement)",
+      "Mobile number aur email id",
+      "Nominee ki detail",
+      "Minor account ke liye: birth certificate aur guardian ki ID",
+    ],
+    highlights: [
+      "Saving account aur current account",
+      "Jan Dhan khata",
+      "Mahila Samman saving account",
+      "Varisht nagrik (senior citizen) khata",
+      "Salary account aur minor account",
+      "Sabhi prakar ke khate — ek din mein",
+    ],
+    note: "Bank of Baroda ka khata humare yahan ek din mein khola jata hai.",
+  },
+  {
+    id: 29,
+    name: "Money Transfer",
+    desc: "Domestic money transfer — kisi bhi bank account mein turant paise bhejiye.",
+    category: "Finance",
+    link: "#contact",
+    docs: [
+      "Bhejne wale ka Aadhaar / ID aur mobile number",
+      "Receiver ka account number aur IFSC code",
+      "Receiver ka naam (bank record ke jaisa)",
+      "Transfer ki amount",
+    ],
+    highlights: ["Instant transfer", "Receipt turant", "Surakshit aur bharosemand"],
+  },
+  {
+    id: 30,
+    name: "Gumasta / Shop Licence",
+    desc: "Shop & Establishment (Gumasta) registration — dukaan ka legal licence.",
+    category: "Business",
+    link: "https://labour.mp.gov.in/",
+    docs: [
+      "Aadhaar card aur PAN card (owner ka)",
+      "Passport size photo",
+      "Dukaan / office ka address proof — bijli bill",
+      "Rent agreement ya NOC (agar kiraye par ho)",
+      "Business ka naam aur nature",
+      "Employees ki sankhya (agar hon)",
+      "Mobile number aur email id",
+    ],
+    highlights: ["Jaldi processing", "GST ke liye bhi kaam aata hai"],
+  },
+  {
+    id: 31,
+    name: "Food License (FSSAI)",
+    desc: "Food business ke liye FSSAI registration aur licence.",
+    category: "Business",
+    link: "https://foscos.fssai.gov.in/",
+    docs: [
+      "Aadhaar card aur PAN card",
+      "Passport size photo",
+      "Business address proof — bijli bill / rent agreement",
+      "Business ka naam aur food category",
+      "Gumasta / GST certificate (agar ho)",
+      "Mobile number aur email id",
+    ],
+    highlights: ["Basic registration, state aur central licence", "Renewal bhi"],
+  },
+  {
+    id: 32,
+    name: "Udyam / MSME Registration",
+    desc: "Udyam Aadhaar (MSME) certificate — chhote vyapaar ke liye zaroori.",
+    category: "Business",
+    link: "https://udyamregistration.gov.in/",
+    docs: [
+      "Aadhaar card (mobile linked)",
+      "PAN card",
+      "Business ka naam, address aur shuruaat ki date",
+      "Bank account number aur IFSC",
+      "Investment aur turnover ki detail",
+      "Mobile number aur email id",
+    ],
+    highlights: ["Certificate turant", "Loan aur subsidy mein laabh"],
+  },
+  {
+    id: 33,
+    name: "College Admission Form",
+    desc: "Kaalej pravesh — online form, document upload aur counselling sahayta.",
+    category: "Education",
+    link: "https://epravesh.mponline.gov.in/",
+    docs: [
+      "Aadhaar card",
+      "10th marksheet",
+      "12th marksheet",
+      "Snatak marksheet (snatakottar ke liye)",
+      "Aay pramaan patra",
+      "Sthanik nivasi pramaan patra",
+      "Jaati pramaan patra (ST / SC / OBC students ke liye)",
+      "Samagra ID",
+      "Mobile number aur email id",
+      "Passport size photo",
+    ],
+    highlights: [
+      "Online form bharna",
+      "Document upload",
+      "Admission form printout",
+      "Counselling sahayta",
+      "Sansthan ki jaankari aur poorn margdarshan",
+    ],
+    note: "Sahi dastavez, sahi kadam — ujjwal bhavishya ki aur.",
+  },
+  {
+    id: 34,
+    name: "ITI Admission 2026",
+    desc: "Sarkari ITI mein pravesh ka sunehra avsar — registration aur choice filling.",
+    category: "Education",
+    link: "https://admission.itionline.gov.in/",
+    docs: [
+      "Aadhaar card",
+      "8th / 10th marksheet",
+      "Samagra ID",
+      "Jaati pramaan patra (agar lagu ho)",
+      "Mool nivasi aur aay pramaan patra",
+      "Passport size photo aur signature",
+      "Mobile number aur email id",
+    ],
+    highlights: [
+      "Registration / correction: 26-05-2026 se 30-06-2026",
+      "Sansthan aur vyavsay ki prathmikta chayan: 01-06-2026 se 30-06-2026",
+      "Prayogik prashikshan (practical training)",
+      "Kaushal vikas aur behtar rozgaar ke avsar",
+    ],
+    note: "Aavedan keval online madhyam se karein. Aagami pravesh schedule portal par jald uplabdh hoga.",
+  },
+  {
+    id: 35,
+    name: "Scholarship Form",
+    desc: "Sabhi prakar ke scholarship form — pre-matric, post-matric aur state scholarship.",
+    category: "Education",
+    link: "https://scholarshipportal.mp.nic.in/",
+    docs: [
+      "Aadhaar card (bank se linked)",
+      "Samagra ID",
+      "Pichhli class ki marksheet",
+      "Aay pramaan patra",
+      "Jaati pramaan patra (agar lagu ho)",
+      "Mool nivasi pramaan patra",
+      "Bank passbook (student ke naam par)",
+      "College / school ka admission proof aur fees receipt",
+    ],
+    highlights: ["Form filling aur document upload", "Status tracking"],
+  },
+  {
+    id: 36,
+    name: "Hotel Booking",
+    desc: "Shehar ho ya hill station — har budget mein hotel booking.",
+    category: "Travel",
+    link: "#contact",
+    docs: [
+      "Guest ka naam aur ek valid ID (Aadhaar / DL)",
+      "Check-in aur check-out ki date",
+      "Shehar, budget aur room type",
+      "Mobile number aur email id",
+    ],
+    highlights: ["Behtareen keemat", "Aasan process", "24x7 sahayta"],
   },
 ];
+
+/**
+ * "1-DAY SERVICE!" — poster ka core promise. Har service same-day hai jab tak
+ * entry me `oneDay: false` na ho, isliye flag yahan default ho jaata hai.
+ */
+export const services: Service[] = catalogue.map((service) => ({
+  ...service,
+  oneDay: service.oneDay ?? true,
+}));
 
 export const categories = [
   "All",
   ...Array.from(new Set(services.map((s) => s.category))),
 ];
+
+/** Same-day services — abhi poora catalogue. */
+export const oneDayServices = services.filter((s) => s.oneDay);
 
 export type Scheme = {
   name: string;

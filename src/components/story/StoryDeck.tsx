@@ -11,18 +11,26 @@ import { StageBackdrop } from "./StageBackdrop";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
 
-/** The carousel reads best at 8 faces — 45° apart, none edge-on for long. */
-const FACES = 8;
+/**
+ * 12 faces — 30° apart. The deck radius in story.css is sized off this count,
+ * so changing it means re-checking that the chord still clears a card.
+ */
+const FACES = 12;
 
+/** Ordered so neighbouring faces never repeat a category. */
 const featured = [
   "Samagra ID",
-  "Ayushman Card",
+  "GST Registration",
   "PAN Card",
+  "ITR Filing",
+  "Ayushman Card",
+  "Bank Account Opening",
   "Aadhaar Card",
-  "Banking / Cash Withdrawal",
-  "All Exam Forms",
+  "EPF / PF Work",
   "Khasra / Khatauni / Naksha",
+  "Banking / Cash Withdrawal",
   "e-Shram Card",
+  "All Exam Forms",
 ]
   .map((name) => services.find((service) => service.name === name))
   .filter((service): service is NonNullable<typeof service> => Boolean(service))
@@ -94,7 +102,8 @@ export function StoryDeck() {
               Har kaam ke liye <span className="text-gradient">ek hi jagah</span>
             </h2>
             <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-              24+ services. Scroll kijiye — ya seedha poori list kholiye.
+              {services.length}+ services, har ek 1 din mein. Scroll kijiye — ya
+              seedha poori list kholiye.
             </p>
           </div>
 
@@ -106,9 +115,16 @@ export function StoryDeck() {
                   className="deck-card act-card p-5 text-left"
                   style={{ ["--face" as string]: `${index * (360 / FACES)}deg` }}
                 >
-                  <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
-                    {service.category}
-                  </span>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-primary">
+                      {service.category}
+                    </span>
+                    {service.oneDay && (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                        1 din
+                      </span>
+                    )}
+                  </div>
                   <h3 className="mt-2 font-display text-base font-bold leading-snug">
                     {service.name}
                   </h3>
@@ -129,7 +145,7 @@ export function StoryDeck() {
               href="/services"
               className="inline-flex items-center gap-2 rounded-full border border-[var(--stage-card-border)] bg-[var(--stage-card)] px-5 py-2.5 text-sm font-semibold backdrop-blur transition-transform duration-300 hover:-translate-y-0.5"
             >
-              Saari 24+ services dekhein
+              Saari {services.length} services dekhein
               <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
             </Link>
           </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { ContactSection } from "@/components/site/ContactSection";
 import { CscSection } from "@/components/site/CscSection";
+import { OneDaySection } from "@/components/site/OneDaySection";
 import { OwnerSection } from "@/components/site/OwnerSection";
 import { PageShell } from "@/components/site/PageShell";
 import { RevealText } from "@/components/site/RevealText";
@@ -13,7 +14,7 @@ import { StoryJourney } from "@/components/story/StoryJourney";
 
 const title = "Vishal Web World | Online Services & Banking";
 const description =
-  "Samagra ID, Ayushman card, PAN, Aadhaar, banking cash withdrawal, forms and scheme applications at Vishal Web World.";
+  "Samagra ID, Ayushman card, PAN, ITR filing, EWS certificate, GST, EPF, banking aur travel booking — har service 1 din mein. Vishal Web World, Panagar, Jabalpur.";
 
 export const metadata: Metadata = {
   title,
@@ -30,6 +31,7 @@ export default function Index() {
       <StoryJourney />
       <StoryDeck />
       <RevealText>Sarkari kaam ka matlab lambi lines aur confusion nahi hona chahiye. Vishal Web World par aapka document, form aur banking kaam ek jagah, official portals par, simple Hinglish guidance ke saath complete hota hai.</RevealText>
+      <OneDaySection />
       <OwnerSection />
       <CscSection />
       <SchemesSection />

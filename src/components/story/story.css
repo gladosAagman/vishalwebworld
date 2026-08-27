@@ -426,23 +426,24 @@
   position: relative;
   transform-style: preserve-3d;
   will-change: transform;
-  /* Radius and card width scale together so the faces never overlap: the chord
-     between two neighbours has to stay wider than a card. */
-  --deck-radius: 250px;
-  --deck-card-width: 12rem;
+  /* Radius and card width scale together so the faces never overlap: with 12
+     faces the chord between neighbours is 2R·sin(15°) ≈ 0.518R, which has to
+     stay wider than a card. */
+  --deck-radius: 350px;
+  --deck-card-width: 11rem;
 }
 
 @media (min-width: 640px) {
   .deck {
-    --deck-radius: 340px;
-    --deck-card-width: 14rem;
+    --deck-radius: 390px;
+    --deck-card-width: 12rem;
   }
 }
 
 @media (min-width: 1024px) {
   .deck {
     --deck-radius: 430px;
-    --deck-card-width: 15rem;
+    --deck-card-width: 13rem;
   }
 }
 

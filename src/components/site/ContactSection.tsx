@@ -1,9 +1,10 @@
 "use client";
 
-import { Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { useState } from "react";
 
 import { ShinyText } from "@/components/reactbits/ShinyText";
+import { addressLines, business } from "@/data/business";
 import { services } from "@/data/services";
 import { WHATSAPP_DISPLAY, waLink } from "./whatsapp";
 import { WhatsAppButton } from "./WhatsAppButton";
@@ -49,14 +50,35 @@ export function ContactSection() {
               </dt>
               <dd className="mt-1 text-muted-foreground">{WHATSAPP_DISPLAY}</dd>
             </div>
+            <div className="card-soft card-soft-hover animate-fade-up p-4 [animation-delay:110ms]">
+              <dt className="flex items-center gap-2 font-semibold text-foreground">
+                <Mail aria-hidden="true" className="h-4 w-4 text-primary" />
+                Email
+              </dt>
+              <dd className="mt-1">
+                <a
+                  href={`mailto:${business.email}`}
+                  className="text-muted-foreground underline-offset-4 transition-colors hover:text-primary hover:underline"
+                >
+                  {business.email}
+                </a>
+              </dd>
+            </div>
             <div className="card-soft card-soft-hover animate-fade-up p-4 [animation-delay:140ms]">
               <dt className="font-semibold text-foreground">Working hours</dt>
-              <dd className="text-muted-foreground">Monday – Sunday, 9:00 AM to 8:00 PM</dd>
+              <dd className="text-muted-foreground">{business.hours}</dd>
             </div>
             <div className="card-soft card-soft-hover animate-fade-up p-4 [animation-delay:200ms]">
-              <dt className="font-semibold text-foreground">Centre</dt>
-              <dd className="text-muted-foreground">
-                Vishal Web World — digital services centre in your area
+              <dt className="flex items-center gap-2 font-semibold text-foreground">
+                <MapPin aria-hidden="true" className="h-4 w-4 text-primary" />
+                Centre
+              </dt>
+              <dd className="mt-1 text-muted-foreground">
+                {addressLines.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
               </dd>
             </div>
           </dl>

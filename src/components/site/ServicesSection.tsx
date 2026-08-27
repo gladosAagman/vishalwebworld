@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ExternalLink, FileCheck2, Search } from "lucide-react";
+import { ChevronDown, ExternalLink, FileCheck2, Info, Search, Sparkles, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { ShinyText } from "@/components/reactbits/ShinyText";
@@ -28,7 +28,8 @@ export function ServicesSection({ compact = false }: ServicesSectionProps) {
         (!term ||
           service.name.toLowerCase().includes(term) ||
           service.desc.toLowerCase().includes(term) ||
-          service.category.toLowerCase().includes(term)),
+          service.category.toLowerCase().includes(term) ||
+          service.highlights?.some((h) => h.toLowerCase().includes(term))),
     );
   }, [q, cat]);
 
@@ -46,6 +47,10 @@ export function ServicesSection({ compact = false }: ServicesSectionProps) {
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
           Kisi bhi service par tap karke official portal kholiye, ya WhatsApp par
           bataiye — hum poora form aapke liye bhar denge.
+        </p>
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1.5 text-xs font-bold text-brand sm:text-sm">
+          <Zap aria-hidden="true" className="h-4 w-4" />
+          Neeche ki saari services 1 din mein complete
         </p>
       </div>
 
@@ -103,6 +108,12 @@ export function ServicesSection({ compact = false }: ServicesSectionProps) {
               <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-semibold text-brand backdrop-blur">
                 {service.category}
               </span>
+              {service.oneDay && (
+                <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
+                  <Zap aria-hidden="true" className="h-3 w-3" />
+                  1 Day
+                </span>
+              )}
             </div>
             <div className="flex flex-1 flex-col p-5">
             <div className="flex items-start gap-3">
@@ -115,6 +126,27 @@ export function ServicesSection({ compact = false }: ServicesSectionProps) {
               </div>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">{service.desc}</p>
+
+            {service.highlights && service.highlights.length > 0 && (
+              <details className="group/hl mt-3">
+                <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-semibold text-primary transition-colors hover:text-primary/80">
+                  <Sparkles aria-hidden="true" className="h-3.5 w-3.5" />
+                  Kya-kya milta hai ({service.highlights.length})
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 transition-transform duration-300 group-open/hl:rotate-180"
+                  />
+                </summary>
+                <ul className="mt-3 space-y-1.5 border-l-2 border-primary/30 pl-3 animate-fade-up">
+                  {service.highlights.map((point) => (
+                    <li key={point} className="text-xs leading-relaxed text-muted-foreground">
+                      • {point}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+
             <details className="group mt-3 flex-1">
               <summary className="flex cursor-pointer list-none items-center gap-1.5 text-xs font-semibold text-brand transition-colors hover:text-brand/80">
                 <FileCheck2 aria-hidden="true" className="h-3.5 w-3.5" />
@@ -132,6 +164,13 @@ export function ServicesSection({ compact = false }: ServicesSectionProps) {
                 ))}
               </ul>
             </details>
+
+            {service.note && (
+              <p className="mt-4 flex items-start gap-2 rounded-lg bg-accent/40 p-3 text-xs leading-relaxed text-muted-foreground">
+                <Info aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand" />
+                <span>{service.note}</span>
+              </p>
+            )}
 
             <div className="mt-5 grid grid-cols-2 gap-2">
               <WhatsAppButton

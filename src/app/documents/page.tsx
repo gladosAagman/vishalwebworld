@@ -7,7 +7,7 @@ import { PageShell } from "@/components/site/PageShell";
 
 const title = "Required Documents Checklist | Vishal Web World";
 const description =
-  "GST registration, PAN, Aadhaar, Ayushman, driving licence aur 25+ services ke liye zaroori documents ki poori checklist ek jagah.";
+  "GST, ITR filing, EWS certificate, marriage registration, EPF, ITI aur college admission — 36+ services ke liye zaroori documents ki poori checklist ek jagah.";
 
 export const metadata: Metadata = {
   title,
@@ -21,7 +21,7 @@ export default function DocumentsPage() {
     <PageShell>
       <PageHero
         motif="documents"
-        caption="25+ checklists · service ke hisaab se"
+        caption="36+ checklists · har kaam 1 din mein"
         eyebrow="Documents checklist"
         title="Kaunse documents chahiye — pehle se ready rakhiye"
         description="Har service ke liye zaroori papers ki list. Centre aane se pehle checklist dekh lijiye, kaam ek hi visit mein ho jaayega."
