@@ -28,14 +28,33 @@
   z-index: 1;
 }
 
+/*
+ * The header floats over the whole page, so whatever filter sits on it is
+ * re-run against everything scrolling underneath. The chromatic displacement
+ * version measured at ~9fps of a 4x-throttled frame budget on every page; a
+ * plain blur is what most visitors get, and the displacement is kept for
+ * pointer-driven wide screens where there is headroom for it.
+ */
 .glass-surface--svg {
   background: hsl(0 0% 100% / var(--glass-frost, 0));
-  backdrop-filter: var(--filter-id, url(#glass-filter)) saturate(var(--glass-saturation, 1)) blur(2px);
+  backdrop-filter: blur(14px) saturate(var(--glass-saturation, 1));
   box-shadow:
     0 0 2px 1px rgba(0, 0, 0, 0.06) inset,
     0 0 10px 4px rgba(0, 0, 0, 0.05) inset,
     0px 4px 16px rgba(17, 17, 26, 0.05),
     0px 8px 24px rgba(17, 17, 26, 0.05);
+}
+
+@media (min-width: 1024px) and (hover: hover) {
+  .glass-surface--svg {
+    backdrop-filter: var(--filter-id, url(#glass-filter)) saturate(var(--glass-saturation, 1)) blur(2px);
+  }
+}
+
+:root[data-perf="lite"] .glass-surface--svg,
+:root[data-perf="lite"] .glass-surface--fallback {
+  backdrop-filter: none;
+  background: color-mix(in oklab, var(--color-card) 92%, transparent);
 }
 
 .glass-surface--fallback {

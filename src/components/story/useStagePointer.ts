@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
+import { isLiteMode } from "@/lib/perf";
 
 /**
  * Writes the pointer position over `ref` as CSS custom properties (--mx / --my,
@@ -15,7 +16,7 @@ export function useStagePointer(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isLiteMode()) return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
     let frame = 0;

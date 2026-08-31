@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, type RefObject } from "react";
 
 import { loadGsap } from "@/lib/gsap";
 import "./ScrollReveal.css";
+import { isLiteMode } from "@/lib/perf";
 
 export type ScrollRevealProps = {
   children: string;
@@ -55,7 +56,7 @@ export function ScrollReveal({
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isLiteMode()) return;
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;

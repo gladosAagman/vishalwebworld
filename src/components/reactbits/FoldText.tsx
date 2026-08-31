@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, type CSSProperties, type ReactNode } from "react";
 
 import { loadGsap } from "@/lib/gsap";
+import { isLiteMode } from "@/lib/perf";
 import "./FoldText.css";
 
 type Hinge = "top" | "bottom" | "left" | "right";
@@ -129,6 +130,9 @@ export function FoldText({
 
     const pieces = Array.from(root.querySelectorAll<HTMLElement>(".fold-text-piece"));
     if (!pieces.length) return;
+    // Lite devices get the headline as plain text: a per-character 3D timeline
+    // is the most expensive way to show a word.
+    if (isLiteMode()) return;
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;

@@ -34,10 +34,13 @@ export function WhatsAppButton<T extends ElementType = "a">({
   className = "",
   ...rest
 }: WhatsAppButtonProps<T>) {
-  let Component: ElementType = as || "a";
+  // Without a destination this is not a link. It used to default to `a`
+  // regardless, so the contact form's `type="submit"` landed on an anchor —
+  // which ignores it — and the form could not be submitted at all.
+  let Component: ElementType = as || (to || href ? "a" : "button");
   const restProps = rest as Record<string, unknown>;
   if (to) {
-    Component = Link as unknown as ElementType;
+    Component = as ?? (Link as unknown as ElementType);
     restProps["href"] = to;
   } else if (href) {
     restProps["href"] = href;

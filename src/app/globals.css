@@ -479,3 +479,42 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/*
+ * Lite mode. Set on <html> before first paint for touch devices, low-core or
+ * low-memory machines, save-data connections and reduced-motion visitors
+ * (see lib/perf.ts). These are the site-wide loops and GPU effects that cost
+ * frames on every page rather than only on the story sections.
+ */
+:root[data-perf="lite"] .marquee-track,
+:root[data-perf="lite"] .marquee-track-reverse,
+:root[data-perf="lite"] .accent-bar,
+:root[data-perf="lite"] .animate-float,
+:root[data-perf="lite"] .animate-glow {
+  animation: none !important;
+}
+
+/* A marquee with no animation must not clip its content off-screen. */
+:root[data-perf="lite"] .marquee-track,
+:root[data-perf="lite"] .marquee-track-reverse {
+  width: auto;
+  flex-wrap: wrap;
+}
+
+/* backdrop-filter is per-frame GPU work behind every glass surface, and the
+   sticky header re-runs it for the whole scroll. */
+:root[data-perf="lite"] .glass-panel,
+:root[data-perf="lite"] [class*="backdrop-blur"] {
+  backdrop-filter: none !important;
+  background-color: var(--color-card);
+}
+
+:root[data-perf="lite"] .tilt-3d {
+  perspective: none;
+  transform-style: flat;
+  transition: none;
+}
+
+:root[data-perf="lite"] .tilt-3d:hover {
+  transform: none;
+}

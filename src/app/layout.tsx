@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { SiteChrome } from "@/components/site/SiteChrome";
+import { LITE_MODE_SCRIPT } from "@/lib/perf";
 
 import "./globals.css";
 
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
+        <script dangerouslySetInnerHTML={{ __html: LITE_MODE_SCRIPT }} />
       </head>
       <body>
         {/* Header, footer, scroll effects and FAB are mounted once here so they

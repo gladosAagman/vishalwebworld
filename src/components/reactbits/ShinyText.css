@@ -1,3 +1,56 @@
 .shiny-text {
   display: inline-block;
+  background-size: 200% auto;
+  background-position: 150% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+ * The sweep repaints the label on every frame — cheap on a desktop, not worth
+ * it anywhere else. Pointer-capable wide screens get the shine; everything
+ * else keeps the same gradient text, standing still.
+ */
+@media (min-width: 1024px) and (hover: hover) {
+  .shiny-text {
+    animation: shiny-sweep linear infinite;
+  }
+}
+
+/*
+ * The highlight crosses the label over the first 40% of the cycle and the rest
+ * is the pause before it comes round again. Keyframe offsets cannot be driven
+ * by a custom property, so the split is fixed here and the component sets the
+ * cycle length (speed + delay) instead.
+ */
+@keyframes shiny-sweep {
+  0% {
+    background-position: 150% center;
+  }
+  40%,
+  100% {
+    background-position: -50% center;
+  }
+}
+
+/* Static text costs nothing to repaint, so lite devices and anyone who asked
+   for less motion get the plain label. */
+/* The gradient arrives as an inline style, so the flat fallback has to out-rank
+   it — without !important the box paints as a coloured bar behind the text. */
+.shiny-text[data-shiny="off"],
+:root[data-perf="lite"] .shiny-text {
+  animation: none;
+  background-image: none !important;
+  -webkit-text-fill-color: currentColor;
+  color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shiny-text {
+    animation: none;
+    background-image: none !important;
+    -webkit-text-fill-color: currentColor;
+    color: currentColor;
+  }
 }

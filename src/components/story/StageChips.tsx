@@ -109,15 +109,15 @@ export function StageChips({ chips }: { chips: readonly StageChip[] }) {
 }
 
 /**
- * Depth of field: the further back a chip sits, the dimmer and softer it gets.
- * Without this the chips all read as equally present and the stage looks like
- * flat stickers rather than a scene with air in it.
+ * Depth of field: the further back a chip sits, the dimmer it gets. It used to
+ * blur with distance too, but a `filter: blur()` on six pointer-tracked chips
+ * is re-run by the GPU on every frame they move — the scale and opacity carry
+ * the depth well enough on their own.
  */
 function depthCue(z: number) {
   const depth = Math.min(1, Math.abs(z) / 480);
   return {
     ["--chip-opacity" as string]: (0.9 - depth * 0.35).toFixed(2),
-    ["--chip-blur" as string]: `${(depth * 2.2).toFixed(1)}px`,
   };
 }
 

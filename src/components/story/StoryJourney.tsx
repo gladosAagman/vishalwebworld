@@ -8,6 +8,7 @@ import { loadGsap } from "@/lib/gsap";
 import { StageBackdrop } from "./StageBackdrop";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
+import { isLiteMode } from "@/lib/perf";
 
 const steps = [
   {
@@ -47,7 +48,7 @@ export function StoryJourney() {
     const shell = shellRef.current;
     const track = trackRef.current;
     if (!shell || !track) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isLiteMode()) return;
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;

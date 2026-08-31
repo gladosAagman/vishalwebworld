@@ -14,6 +14,7 @@ import { StageBackdrop } from "./StageBackdrop";
 import { chipsFrom, StageChips } from "./StageChips";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
+import { isLiteMode } from "@/lib/perf";
 
 /** Six services, dropped into the shared floor slots. */
 const chips = chipsFrom([
@@ -45,7 +46,7 @@ export function StoryHero() {
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isLiteMode()) return;
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;

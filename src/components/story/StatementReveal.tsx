@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useMemo, useRef } from "react";
 
 import "./statement.css";
+import { isLiteMode } from "@/lib/perf";
 
 type StatementRevealProps = {
   children: string;
@@ -40,7 +41,7 @@ export function StatementReveal({ children, className = "", eyebrow }: Statement
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isLiteMode()) return;
 
     let frame = 0;
 

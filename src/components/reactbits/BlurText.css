@@ -1,0 +1,59 @@
+.blur-text {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.blur-text-part {
+  display: inline-block;
+}
+
+/* Mounted, waiting for the words to come into view. */
+.blur-text[data-state="armed"] .blur-text-part {
+  opacity: 0;
+}
+
+.blur-text[data-state="in"] .blur-text-part {
+  animation: blur-text-in var(--blur-text-step, 0.7s) cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--blur-text-index) * var(--blur-text-stagger, 200ms));
+  will-change: transform, filter, opacity;
+}
+
+@keyframes blur-text-in {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(-50px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(5px);
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.blur-text[data-direction="bottom"][data-state="in"] .blur-text-part {
+  animation-name: blur-text-in-up;
+}
+
+@keyframes blur-text-in-up {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(50px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(5px);
+    transform: translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}

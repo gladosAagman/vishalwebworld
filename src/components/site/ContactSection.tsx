@@ -19,10 +19,33 @@ export function ContactSection() {
     note: "",
   });
 
+  /**
+   * Turns the filled form into a ready-to-send WhatsApp message.
+   *
+   * Empty optional fields are left out rather than sent as "-", so the message
+   * that lands in the chat reads like something a person typed.
+   *
+   * Opening it: a new tab is nicer on a desktop, but mobile browsers block
+   * `window.open` often enough that the button would silently do nothing there
+   * — so a blocked popup falls back to navigating this tab, which always
+   * reaches the app.
+   */
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    const msg = `Namaste Vishal Web World!\nMujhe ye service chahiye.\nService: ${form.service}\nName: ${form.name}\nMobile: ${form.mobile}\nCity/Village: ${form.place}\nDetails: ${form.note || "-"}`;
-    window.open(waLink(msg), "_blank", "noopener,noreferrer");
+
+    const lines = [
+      "Namaste Vishal Web World!",
+      "Mujhe ye service chahiye.",
+      `Service: ${form.service}`,
+      `Name: ${form.name}`,
+      `Mobile: ${form.mobile}`,
+      form.place.trim() && `City/Village: ${form.place.trim()}`,
+      form.note.trim() && `Details: ${form.note.trim()}`,
+    ].filter(Boolean);
+
+    const url = waLink(lines.join("\n"));
+    const opened = window.open(url, "_blank", "noopener,noreferrer");
+    if (!opened) window.location.href = url;
   }
 
   const field =

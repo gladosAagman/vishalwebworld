@@ -26,19 +26,33 @@
 .border-gradient-bottom {
   bottom: -14px;
   right: -250%;
-  animation-name: star-movement-bottom;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
 }
 
 .border-gradient-top {
   top: -14px;
   left: -250%;
-  animation-name: star-movement-top;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
+}
+
+/*
+ * The stars used to travel around the button for as long as the page was open.
+ * Two 300%-wide gradients animating forever is real per-frame work for an idle
+ * button, so they now run while the pointer is on it — which is also the only
+ * time anyone is looking at it.
+ */
+@media (hover: hover) {
+  .star-border-container:hover .border-gradient-bottom {
+    animation-name: star-movement-bottom;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  .star-border-container:hover .border-gradient-top {
+    animation-name: star-movement-top;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
 }
 
 .inner-content {

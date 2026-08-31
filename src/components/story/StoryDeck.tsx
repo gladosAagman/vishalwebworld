@@ -10,6 +10,7 @@ import { loadGsap } from "@/lib/gsap";
 import { StageBackdrop } from "./StageBackdrop";
 import "./story.css";
 import { useStagePointer } from "./useStagePointer";
+import { isLiteMode } from "@/lib/perf";
 
 /**
  * 12 faces — 30° apart. The deck radius in story.css is sized off this count,
@@ -52,7 +53,7 @@ export function StoryDeck() {
     const shell = shellRef.current;
     const deck = deckRef.current;
     if (!shell || !deck) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isLiteMode()) return;
 
     let cancelled = false;
     let cleanup: (() => void) | undefined;
