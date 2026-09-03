@@ -10,6 +10,7 @@ import { StarButton } from "@/components/site/StarButton";
 import { waLink } from "@/components/site/whatsapp";
 import { WhatsAppButton } from "@/components/site/WhatsAppButton";
 import { loadGsap } from "@/lib/gsap";
+import { HeroSlideshow } from "./HeroSlideshow";
 import { StageBackdrop } from "./StageBackdrop";
 import { chipsFrom, StageChips } from "./StageChips";
 import "./story.css";
@@ -25,6 +26,18 @@ const chips = chipsFrom([
   { label: "Khasra / Khatauni", icon: "Landmark" },
   { label: "Exam Form", icon: "ScrollText" },
 ]);
+
+/** The newer, high-demand services — named up front, above the fold. */
+const highlights = [
+  "GST",
+  "Gumasta",
+  "ITR Filing",
+  "RTO Work",
+  "Driving Licence",
+  "Car & Bike Insurance",
+  "Railway & Flight",
+  "Hotel Booking",
+];
 
 const stats = [
   ["24+", "Services"],
@@ -161,6 +174,17 @@ export function StoryHero() {
             digital seva centre se, official portals par.
           </p>
 
+          <ul className="mt-5 flex flex-wrap gap-2">
+            {highlights.map((item) => (
+              <li
+                key={item}
+                className="rounded-full border border-[var(--stage-card-border)] bg-[var(--stage-card)] px-2.5 py-1 text-[11px] font-semibold text-muted-foreground backdrop-blur sm:text-xs"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <WhatsAppButton
               href={waLink(
@@ -194,19 +218,7 @@ export function StoryHero() {
         </div>
 
         <div className="space-y-4">
-          <div className="act-card tilt-3d overflow-hidden p-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/hero-csc-new.jpg"
-              alt="Vishal Web World centre par ek customer ko online form fill karne mein help mil rahi hai"
-              width={1200}
-              height={800}
-              loading="eager"
-              fetchPriority="high"
-              decoding="async"
-              className="w-full rounded-[0.9rem] object-cover"
-            />
-          </div>
+          <HeroSlideshow />
           <GovSearch />
         </div>
       </div>
